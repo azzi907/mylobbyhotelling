@@ -23,6 +23,7 @@
     "react-native": "0.68.2",
     "react-native-add-calendar-event": "^4.0.0",
     "react-native-calendar-events": "^2.2.0",
+    "react-native-dropdown-picker": "^5.4.2",
     "react-native-image-mapper": "^0.1.11",
     "react-native-localize": "^2.2.1",
     "react-native-modal-datetime-picker": "^13.1.2",

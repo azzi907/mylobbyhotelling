@@ -14,6 +14,7 @@ import {Button, TextInput} from 'react-native-paper';
 import store from '../Store/index';
 import {cloneDeep, filter, includes, toLower} from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const LoginScreen = (props: any) => {
   const BACKEND_URL = store.store.parameters.backendUrl;

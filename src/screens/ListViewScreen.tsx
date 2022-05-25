@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {
@@ -18,6 +19,8 @@ export default function ListView(props: any) {
   const [searchQuery, setSearchQuery] = React.useState('');
   const BACKEND_URL = Store.store.parameters.backendUrl;
   const [rooms, setRooms] = useState<any>(null);
+
+  const [filteredRooms, setFilteredRooms] = useState<any>(null);
   const getRooms = async () => {
     const date1 = new Date();
     const date2 = new Date().setDate(date1.getDate() + 1);
@@ -43,7 +46,7 @@ export default function ListView(props: any) {
       .then(response => response.json())
       .then(result => {
         setRooms(result.rooms);
-        console.log(rooms);
+        setFilteredRooms(result.rooms);
       })
       .catch(error => {
         console.log(error);
@@ -54,8 +57,24 @@ export default function ListView(props: any) {
     getRooms();
   }, []);
 
-  // const date = new Date(); // 2009-11-10
-  // const month = date.toLocaleString('default', {month: 'long'});
+  useEffect(() => {
+    setFilteredRooms(() => {
+      if (searchQuery) {
+        const filteredData = rooms.filter((element: any) => {
+          return element.name.toLowerCase().includes(searchQuery.toLowerCase());
+        });
+        return filteredData;
+      } else {
+        return filteredRooms;
+      }
+    });
+  }, [searchQuery]);
+
+  const onChangeSearch = (query: React.SetStateAction<string>) => {
+    setSearchQuery(query);
+  };
+  console.log(props.route.params);
+
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -84,6 +103,7 @@ export default function ListView(props: any) {
               props.navigation.navigate('FloorPlanView', {
                 date: props.route.params.date,
                 rooms: props.route.params.room,
+                ...props.route.params,
               });
             }}>
             <Text style={{fontSize: 20, fontWeight: '600'}}>
@@ -97,11 +117,12 @@ export default function ListView(props: any) {
         <Searchbar
           placeholder="Search"
           value={searchQuery}
+          onChangeText={onChangeSearch}
           style={{marginTop: 10, borderRadius: 10}}
         />
         <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
         <ScrollView style={{height: '75%'}}>
-          {rooms?.map((roomData: any) => {
+          {filteredRooms?.map((roomData: any) => {
             return (
               <View style={[styles.box, styles.shadowProp]} key={roomData.id}>
                 <View style={styles.box2}>
@@ -144,9 +165,7 @@ export default function ListView(props: any) {
           })}
         </ScrollView>
       </View>
-      <Text style={{marginTop: 'auto', marginBottom: 10}}>
-        Powered by MyLobby.co
-      </Text>
+      <Text style={{marginTop: 'auto'}}>Powered by MyLobby.co</Text>
     </SafeAreaView>
   );
 }

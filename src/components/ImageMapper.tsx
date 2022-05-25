@@ -1,11 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
-import { allowStateReadsStart } from 'mobx/dist/internal';
+import {allowStateReadsStart} from 'mobx/dist/internal';
 import React, {Component} from 'react';
 import {ImageBackground, View, TouchableOpacity} from 'react-native';
 
 class ImageMapper extends Component {
-  static defaultProps: {multiselect: boolean, imgSource: string, imgMap: any, onPress: any, imgHeight:any, imgWidth:any, containerStyle:any, selectedAreaId:any};
- 
+  static defaultProps: {
+    multiselect: boolean;
+    imgSource: string;
+    imgMap: any;
+    onPress: any;
+    imgHeight: any;
+    imgWidth: any;
+    containerStyle: any;
+    selectedAreaId: any;
+  };
+
   buildStyle(item: any) {
     const {x1, y1, x2, y2, width, height, shape, fill, prefill, id, radius} =
       item;
@@ -46,19 +55,14 @@ class ImageMapper extends Component {
   }
 
   render() {
-    const {imgHeight, imgWidth, imgSource, imgMap, containerStyle, onPress} = this
-      .props as any;
-      console.log('====================================');
-      console.log('imgMap =>', imgMap);
-      console.log('====================================');
-      console.log('====================================');
-      console.log(imgSource);
-      console.log('====================================');
+    const {imgHeight, imgWidth, imgSource, imgMap, containerStyle, onPress} =
+      this.props as any;
+
     return (
       <View style={[{flex: 1}, containerStyle]}>
         <ImageBackground
           style={{height: imgHeight, width: imgWidth}}
-          source={{ uri: `${imgSource}`}}>
+          source={{uri: `${imgSource}`}}>
           {imgMap?.map((item: any, index: any) => (
             <TouchableOpacity
               key={item.id}

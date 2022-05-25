@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
@@ -10,12 +11,9 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {Searchbar} from 'react-native-paper';
 import ImageMapper from '../components/ImageMapper';
-// import ImageMapper from '../components/ImageMapper';
-// import ImageMapper from '../components/ImageMapper';
+import DropDownPicker from 'react-native-dropdown-picker';
 import Store from '../Store';
-// import {ImageMapper} from 'react-native-image-mapper';
 
 export default function FloorPlanView(this: any, props: any) {
   const BACK_ICON = require('../../images/back-icon.png');
@@ -23,20 +21,18 @@ export default function FloorPlanView(this: any, props: any) {
   const RECT_GREEN = require('../../images/rectangle-green.png');
   const CIRC_RED = require('../../images/circle-red.png');
   const CIRC_GREEN = require('../../images/circle-green.png');
-  const img = require('../../images/human.png');
   const BACKEND_URL = Store.store.parameters.backendUrl;
   const [area, setArea] = React.useState<any>({});
-  const [filteredArea, setFilteredArea] = React.useState<any>(null);
+  const [open, setOpen] = useState(false);
+  const [floorPlanList, setFloorPlanList] = useState<any>([]);
+  const [selectedFloorPlan, setSelectedFloorPlan] = useState<any>();
+  const [floorPlanAll, setFloorPlanAll] = React.useState<any>([]);
   const [Plan, setFloorPlan] = React.useState<any>(null);
-  const [roomNameSelected, setRoomNameSelected] = React.useState('');
-  const [roomIdSelected, setRoomIdSelected] = React.useState<any>(null);
-  const [searchQuery, setSearchQuery] = React.useState('');
-
   const [rooms, setRooms] = useState<any>(null);
 
   const getRooms = async () => {
-    const date1 = new Date();
-    const date2 = new Date().setDate(date1.getDate() + 1);
+    const date1 = new Date(props.route.params.startDate);
+    const date2 = new Date(props.route.params.endDate);
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -46,15 +42,12 @@ export default function FloorPlanView(this: any, props: any) {
       body: JSON.stringify({
         accountId: Store.userStore.auth.employee.accountId,
         dateFrom: date1.getTime(),
-        dateTo: new Date(date2).getTime(),
+        dateTo: date2.getTime(),
         isDesk: props.route.params.isDesk,
         isRoom: props.route.params.isRoom,
         isOffice: props.route.params.isOffice,
       }),
     };
-    console.log('====================================');
-    console.log(requestOptions);
-    console.log('====================================');
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
@@ -65,6 +58,43 @@ export default function FloorPlanView(this: any, props: any) {
         ToastAndroid.show('Error saving ical', ToastAndroid.LONG);
       });
   };
+
+  React.useEffect(() => {
+    if (selectedFloorPlan) {
+      const fp: any = floorPlanAll.filter(
+        (fpc: any) => fpc.name === selectedFloorPlan,
+      );
+      console.log('fp ==>', fp);
+
+      fp[0].areaRN?.forEach((ar: any) => {
+        const isAvailable = rooms.find(
+          (room: any) =>
+            room.location === fp[0].name &&
+            room.name === ar.name &&
+            room.isBlocked === false,
+        );
+        const blocked = rooms.find(
+          (room: any) =>
+            room.location === fp[0].name &&
+            room.name === ar.name &&
+            room.isBlocked === true,
+        );
+        if (isAvailable) {
+          ar.fill = 'green';
+          ar.prefill = 'green';
+        } else if (blocked) {
+          ar.fill = 'yellow';
+          ar.prefill = 'yellow';
+        } else {
+          ar.fill = 'red';
+          ar.prefill = 'red';
+        }
+      });
+      setArea(fp[0].areaRN);
+      setFloorPlan(fp[0]);
+    }
+  }, [selectedFloorPlan]);
+
   React.useEffect(() => {
     getRooms();
   }, []);
@@ -76,49 +106,61 @@ export default function FloorPlanView(this: any, props: any) {
       .then(response => response.json())
       .then(result => {
         const floorPlan = result.floorPlans;
-        console.log('====================================');
-        console.log('floorPlan ===>', floorPlan);
-        console.log('====================================');
-        floorPlan[1].areaRN
-          .forEach((ar: any) => {
-            const isAvailable = rooms.find(
-              (room: any) =>
-                room.location === floorPlan[1].name &&
-                room.name === ar.title &&
-                room.isBlocked === false,
-            );
-            const blocked = rooms.find(
-              (room: any) =>
-                room.location === floorPlan[1].name &&
-                room.name === ar.title &&
-                room.isBlocked === true,
-            );
-            if (isAvailable) {
-              ar.fill = 'green';
-            } else if (blocked) {
-              ar.fill = 'yellow';
-            } else {
-              ar.fill = 'red';
-            }
-            setArea(floorPlan[1].areaRN);
-            setFilteredArea(floorPlan[1].areaRN);
-            setFloorPlan(floorPlan[1]);
-          })
-          .catch((error: any) => {
-            console.log('floor plan exception =>', error);
-            ToastAndroid.show('Error Getting Floor Plan', ToastAndroid.LONG);
-          });
+        setFloorPlanAll(floorPlan);
+        floorPlan[1].areaRN.forEach((ar: any) => {
+          const isAvailable = rooms.find(
+            (room: any) =>
+              room.location === floorPlan[1].name &&
+              room.name === ar.name &&
+              room.isBlocked === false,
+          );
+          const blocked = rooms.find(
+            (room: any) =>
+              room.location === floorPlan[1].name &&
+              room.name === ar.name &&
+              room.isBlocked === true,
+          );
+          if (isAvailable) {
+            ar.fill = 'green';
+            ar.prefill = 'green';
+          } else if (blocked) {
+            ar.fill = 'yellow';
+            ar.prefill = 'yellow';
+          } else {
+            ar.fill = 'red';
+            ar.prefill = 'red';
+          }
+        });
+        setArea(floorPlan[1].areaRN);
+        setFloorPlan(floorPlan[1]);
+        const l: any = [];
+        floorPlan.map((fp: any) => {
+          l.push({label: fp.name, value: fp.name});
+        });
+        setFloorPlanList(l);
+      })
+      .catch((error: any) => {
+        console.log('floor plan exception =>', error);
+        ToastAndroid.show('Error Getting Floor Plan', ToastAndroid.LONG);
       });
   };
 
   function mainImgWasPressed(item: any) {
-    const resource = rooms.find((r: any) => r.name === item.name);
-
-    props.navigation.navigate('BookNow', {
-      ...props.route.params,
-      roomId: resource.id,
-      roomName: resource.name,
-    });
+    if (item.fill === 'green') {
+      const resource = rooms.find((r: any) => r.name === item.name);
+      props.navigation.navigate('BookNow', {
+        ...props.route.params,
+        roomId: resource.id,
+        roomName: resource.name,
+      });
+    } else if (item.fill === 'yellow') {
+      ToastAndroid.show(
+        'Not Available Due to Social Distancing',
+        ToastAndroid.LONG,
+      );
+    } else {
+      ToastAndroid.show('Already Booked', ToastAndroid.LONG);
+    }
   }
 
   React.useEffect(() => {
@@ -128,14 +170,6 @@ export default function FloorPlanView(this: any, props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rooms]);
 
-  React.useEffect(() => {
-    if (Plan) {
-      console.log(
-        `${BACKEND_URL}/resources/floorplans/${Store.userStore.auth.employee.sites[0]}/${Plan.file}`,
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Plan]);
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -166,16 +200,23 @@ export default function FloorPlanView(this: any, props: any) {
             onPress={() => {
               props.navigation.navigate('ListView', {
                 date: props.route.params.date,
+                ...props.route.params,
               });
             }}>
             <Text style={{fontSize: 20, fontWeight: '600'}}>List View</Text>
           </TouchableOpacity>
         </View>
-        <Searchbar
-          placeholder="Search"
-          value={searchQuery}
-          style={{marginTop: 10, borderRadius: 10}}
-        />
+        <View style={{marginTop: 10}}>
+          <DropDownPicker
+            open={open}
+            value={selectedFloorPlan}
+            items={floorPlanList}
+            setOpen={setOpen}
+            setValue={() => {}}
+            onSelectItem={t => setSelectedFloorPlan(t.value)}
+            placeholder="Select Floor Plan"
+          />
+        </View>
         <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
         {Plan?.file ? (
           <ScrollView horizontal={true}>
@@ -185,9 +226,7 @@ export default function FloorPlanView(this: any, props: any) {
                 imgWidth={Plan.imageDim[0]}
                 imgSource={`${BACKEND_URL}/resources/floorplans/${Store.userStore.auth.employee.sites[0]}/${Plan.file}`}
                 imgMap={area}
-                onPress={(item: any, idx: any, event: any) =>
-                  mainImgWasPressed(item)
-                }
+                onPress={(item: any) => mainImgWasPressed(item)}
                 containerStyle={{top: 10}}
                 selectedAreaId={'0'}
               />
@@ -274,6 +313,8 @@ const styles = StyleSheet.create({
     width: '70%',
     height: 70,
     marginTop: 30,
+    bottom: 0,
+    // position:'absolute',
     borderWidth: 1,
   },
   text: {
