@@ -8,7 +8,6 @@ import * as RNLocalize from 'react-native-localize';
 export default function BookNow(props: any) {
   const startDate = new Date(props.route.params.startDate);
   const endDate = new Date(props.route.params.endDate);
-  console.log(props.route.params.endDate);
   const BACKEND_URL = Store.store.parameters.backendUrl;
 
   const bookNow = async () => {
@@ -41,13 +40,9 @@ export default function BookNow(props: any) {
         timeZone: RNLocalize.getTimeZone(),
       }),
     };
-    console.log('====================================');
-    console.log(requestOptions);
-    console.log('====================================');
     fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
-        console.log(result);
         props.navigation.navigate('Booked', {
           roomName: props.route.params.roomName,
           roomId: props.route.params.roomId,
@@ -58,10 +53,6 @@ export default function BookNow(props: any) {
         });
       })
       .catch(error => {
-        console.log(
-          'Store.userStore.auth.employee.name ===>',
-          Store.userStore.auth.employee.name,
-        );
         console.log(error);
       });
   };

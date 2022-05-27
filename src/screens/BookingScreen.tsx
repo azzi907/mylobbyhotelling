@@ -76,7 +76,7 @@ export default function BookingScreen(props: any) {
         RNCalendarEvents.checkPermissions();
         RNCalendarEvents.findCalendars();
         const reservation = await RNCalendarEvents.findEventById(
-          eventIdentifier,
+          calendarItemIdentifier,
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
@@ -101,9 +101,6 @@ export default function BookingScreen(props: any) {
   }
   return (
     <SafeAreaView style={styles.page}>
-      {/* <TouchableOpacity style={styles.icalButton} onPress={showModal}>
-        <Text style={{color: 'white'}}>Add Calendar</Text>
-      </TouchableOpacity> */}
       <Text style={styles.welcome}>
         Hi, {Store.userStore.auth.employee.name}
       </Text>
@@ -225,7 +222,8 @@ const styles = StyleSheet.create({
   companyLogo: {
     width: 150,
     height: 150,
-    marginTop: 20,
+    marginTop: 30,
+    marginBottom: 20,
   },
   buttonText: {
     color: 'white',
