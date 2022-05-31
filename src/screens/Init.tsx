@@ -1,5 +1,5 @@
 import React from 'react';
-import store from '../Store/index';
+import {useRootStoreContext} from '../Store/index';
 import {View} from 'react-native';
 import {ActivityIndicator, Caption} from 'react-native-paper';
 import {observer} from 'mobx-react-lite';
@@ -7,13 +7,13 @@ import {useFocusEffect} from '@react-navigation/native';
 import {isEmpty} from 'lodash';
 
 export default observer((props: any) => {
+  const {store, userStore} = useRootStoreContext();
+
   const bootstrap = async () => {
-    await store.store.init();
-    await store.userStore.init();
-    if (
-      !isEmpty(store.userStore.auth.sites) &&
-      !isEmpty(store.userStore.auth.employee)
-    ) {
+    await store.init();
+    await userStore.init();
+    if (!isEmpty(userStore.auth.sites) && !isEmpty(userStore.auth.employee)) {
+      userStore.update('logout', false);
       props.navigation.navigate('Booking');
     } else {
       props.navigation.navigate('Login');

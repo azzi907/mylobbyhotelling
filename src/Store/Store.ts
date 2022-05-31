@@ -1,5 +1,7 @@
-import {observable, action} from 'mobx';
+import {action, makeAutoObservable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MobXRootStore from '.';
+import {makePersistable} from 'mobx-persist-store';
 
 interface Parameter {
   backendUrl:
@@ -9,11 +11,19 @@ interface Parameter {
 }
 
 export default class State {
-  @observable parameters: Parameter = {
+  parameters: Parameter = {
     backendUrl: 'https://eme.my-lobby.com',
   };
 
-  @action
+  constructor(public mobXRootStore: MobXRootStore) {
+    makeAutoObservable(this, {});
+    makePersistable(this, {
+      name: 'State',
+      properties: ['parameters'],
+      storage: AsyncStorage,
+    });
+  }
+
   async init() {
     let parameters = await AsyncStorage.getItem('parameters');
     if (parameters) {
@@ -21,11 +31,9 @@ export default class State {
     }
   }
 
-  @action
   async update(type: string, value: any) {
     let updatedParameters: any = this.parameters;
     updatedParameters[type] = value;
-    await AsyncStorage.setItem('parameters', JSON.stringify(updatedParameters));
     this.parameters = updatedParameters;
   }
 

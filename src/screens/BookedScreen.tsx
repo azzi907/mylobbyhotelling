@@ -1,9 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
+import {observer} from 'mobx-react';
 import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView, Image} from 'react-native';
-import Store from '../Store';
+import {useRootStoreContext} from '../Store';
 
-export default function Booked(props: any) {
+function Booked(props: any) {
+  const {userStore} = useRootStoreContext();
+
   const BOOKED = require('../../images/check-mark.png');
   const callBack = () => {
     props.navigation.navigate('Booking');
@@ -12,7 +15,7 @@ export default function Booked(props: any) {
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
-        <Text style={styles.text}>{Store.userStore.auth.employee.name}</Text>
+        <Text style={styles.text}>{userStore.auth.employee.name}</Text>
         <Text style={styles.text}>
           You have selected {props.route.params.roomName}
         </Text>
@@ -50,3 +53,4 @@ const styles = StyleSheet.create({
   },
   bookedIcon: {width: 110, height: 110},
 });
+export default observer(Booked);

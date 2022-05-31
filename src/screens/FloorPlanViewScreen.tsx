@@ -13,15 +13,20 @@ import {
 } from 'react-native';
 import ImageMapper from '../components/ImageMapper';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Store from '../Store';
 
-export default function FloorPlanView(this: any, props: any) {
+import {useRootStoreContext} from '../Store';
+import {observer} from 'mobx-react-lite';
+
+function FloorPlanView(this: any, props: any) {
+  const {store, userStore} = useRootStoreContext();
+
   const BACK_ICON = require('../../images/back-icon.png');
   const RECT_RED = require('../../images/rectangle-red.png');
   const RECT_GREEN = require('../../images/rectangle-green.png');
   const CIRC_RED = require('../../images/circle-red.png');
   const CIRC_GREEN = require('../../images/circle-green.png');
-  const BACKEND_URL = Store.store.parameters.backendUrl;
+
+  const BACKEND_URL = store.parameters.backendUrl;
   const [area, setArea] = React.useState<any>({});
   const [open, setOpen] = useState(false);
   const [floorPlanList, setFloorPlanList] = useState<any>([]);
@@ -40,7 +45,7 @@ export default function FloorPlanView(this: any, props: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        accountId: Store.userStore.auth.employee.accountId,
+        accountId: userStore.auth.employee.accountId,
         dateFrom: date1.getTime(),
         dateTo: date2.getTime(),
         isDesk: props.route.params.isDesk,
@@ -99,7 +104,7 @@ export default function FloorPlanView(this: any, props: any) {
 
   const getFloorPlan = async () => {
     fetch(
-      `${BACKEND_URL}/api/floor_plans/list?accountId=${Store.userStore.auth.employee.accountId}`,
+      `${BACKEND_URL}/api/floor_plans/list?accountId=${userStore.auth.employee.accountId}`,
     )
       .then(response => response.json())
       .then(result => {
@@ -223,7 +228,7 @@ export default function FloorPlanView(this: any, props: any) {
               <ImageMapper
                 imgHeight={Plan.imageDim[1]}
                 imgWidth={Plan.imageDim[0]}
-                imgSource={`${BACKEND_URL}/resources/floorplans/${Store.userStore.auth.employee.sites[0]}/${Plan.file}`}
+                imgSource={`${BACKEND_URL}/resources/floorplans/${userStore.auth.employee.sites[0]}/${Plan.file}`}
                 imgMap={area}
                 onPress={(item: any) => mainImgWasPressed(item)}
                 containerStyle={{top: 10}}
@@ -334,3 +339,4 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 });
+export default observer(FloorPlanView);
