@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import {Button} from 'react-native-paper';
 import * as RNLocalize from 'react-native-localize';
@@ -7,11 +7,25 @@ import {useRootStoreContext} from '../Store';
 import {observer} from 'mobx-react-lite';
 
 function BookNow(props: any) {
+  console.log('Props ====>', props.route.params);
+  const [invitees, setInvitees] = useState(null);
   const {store, userStore} = useRootStoreContext();
 
   const startDate = new Date(props.route.params.startDate);
   const endDate = new Date(props.route.params.endDate);
   const BACKEND_URL = store.parameters.backendUrl;
+
+  useEffect(() => {
+    const inviteees = props.route.params.invitees;
+    var arr: any = [];
+    if (inviteees) {
+      inviteees.map((i: any) => {
+        arr.push({name: i.name, email: i.email});
+      });
+      setInvitees(arr);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const bookNow = async () => {
     const requestOptions = {
@@ -24,7 +38,9 @@ function BookNow(props: any) {
 
       body: JSON.stringify({
         name: userStore.auth.employee.name,
-        siteName: userStore.auth.siteName,
+        title: props.route.params.title,
+        invitees: invitees,
+        siteName: userStore.auth.sites[0]?.name,
         company: userStore.auth.employee.company,
         phone: userStore.auth.employee.phonesms,
         email: userStore.auth.employee.email,
@@ -84,6 +100,7 @@ function BookNow(props: any) {
           Modify
         </Button>
         <Button
+          disabled={invitees === null ? true : false}
           color={'#4299E1'}
           labelStyle={styles.buttonText}
           style={{width: '40%', borderRadius: 20}}

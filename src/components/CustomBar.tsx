@@ -19,7 +19,7 @@ function CustomTabBar(props: any) {
   };
 
   const navigateToFindColleague = () => {
-    props.navigation.navigate('FloorPlanView');
+    props.navigation.navigate('MyMeetings');
   };
 
   const navigateToMyMeetings = () => {

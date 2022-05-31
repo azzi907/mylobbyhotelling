@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
+import {observer} from 'mobx-react-lite';
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -12,12 +13,14 @@ import {
   ToastAndroid,
 } from 'react-native';
 import {Searchbar} from 'react-native-paper';
-import Store from '../Store';
+import {useRootStoreContext} from '../Store';
 
-export default function ListView(props: any) {
+function ListView(props: any) {
+  const {store, userStore} = useRootStoreContext();
+
   const BACK_ICON = require('../../images/back-icon.png');
   const [searchQuery, setSearchQuery] = React.useState('');
-  const BACKEND_URL = Store.store.parameters.backendUrl;
+  const BACKEND_URL = store.parameters.backendUrl;
   const [rooms, setRooms] = useState<any>(null);
 
   const [filteredRooms, setFilteredRooms] = useState<any>(null);
@@ -31,7 +34,7 @@ export default function ListView(props: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        accountId: Store.userStore.auth.employee.accountId,
+        accountId: userStore.auth.employee.accountId,
         dateFrom: date1.getTime(),
         dateTo: new Date(date2).getTime(),
         isDesk: props.route.params.isDesk,
@@ -232,3 +235,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+export default observer(ListView);

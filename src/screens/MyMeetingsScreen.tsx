@@ -19,6 +19,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {observer} from 'mobx-react';
+import {useIsFocused} from '@react-navigation/native';
 
 function MyMeetings(props: any) {
   const {store, userStore} = useRootStoreContext();
@@ -32,7 +33,7 @@ function MyMeetings(props: any) {
 
   const [meetingRooms, setMeetingRooms] = useState<any>(null);
   const BACKEND_URL = store.parameters.backendUrl;
-
+  const isFocused = useIsFocused();
   const getMeetings = async () => {
     const requestOptions = {
       method: 'POST',
@@ -47,21 +48,61 @@ function MyMeetings(props: any) {
     fetch(`${BACKEND_URL}/api/rooms_reservations/meetings`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        setMeetingRooms(result);
+        setMeetingRooms(result.reservations);
       })
       .catch(error => {
         console.log(error);
         ToastAndroid.show('Error fetching meeting rooms', ToastAndroid.LONG);
       });
   };
+  console.log(isFocused);
+
   useEffect(() => {
-    getMeetings();
-  }, []);
+    if (isFocused) {
+      getMeetings();
+    }
+  }, [isFocused]);
+  console.log('Meeting Rooms===>', JSON.stringify(meetingRooms));
+  async function cancleMeeting(id: any) {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    };
+    fetch(
+      `${BACKEND_URL}/api/rooms_reservations/cancelBooking/${id}`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
+        console.log('Result Cancle ====>', result.status);
+        getMeetings();
+      })
+      .catch(error => {
+        console.log(error);
+        ToastAndroid.show('Error Canceling Meeting', ToastAndroid.LONG);
+      });
+  }
+  useEffect(() => {
+    setMeetingRooms(() => {
+      if (searchQuery) {
+        const filteredData = meetingRooms.filter((element: any) => {
+          return element.title
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+        });
+        return filteredData;
+      } else {
+        return meetingRooms;
+      }
+    });
+  }, [searchQuery]);
+
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
-  console.log('Meeting Rooms===>', meetingRooms);
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -69,7 +110,7 @@ function MyMeetings(props: any) {
           <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
-              props.navigation.navigate('SelectViews', {...props.route.params});
+              props.navigation.navigate('Booking', {...props.route.params});
             }}>
             <Image style={{marginTop: 3}} source={BACK_ICON} />
             <Text style={{color: '#51D1FA', marginLeft: 4}}>Back</Text>
@@ -117,58 +158,86 @@ function MyMeetings(props: any) {
           </View>
         </View>
         <Text style={{marginTop: 10}}>Today:</Text>
-        <ScrollView
-          style={{height: hp(75)}}
-          showsVerticalScrollIndicator={false}>
-          {meetingRooms?.map(data => {
-            return (
-              <View style={[styles.box, styles.shadowProp]}>
-                <TouchableOpacity>
-                  <Image style={styles.editImg} source={EDIT} />
-                </TouchableOpacity>
-                <Text style={styles.nameHeading}>OaksWill</Text>
-                <Text style={styles.headings}>11:00 Am - 12:00 PM</Text>
-                <Text style={styles.headings}>
-                  Confirmation Code: EV 00-1000
-                </Text>
-                <TouchableOpacity>
-                  <Text style={styles.cancleMeeting}>Cancle Meeting ?</Text>
-                </TouchableOpacity>
-                <Text style={styles.invitees}>Invitees</Text>
-                <View style={styles.table}>
-                  <View style={styles.tableData}>
-                    <View style={styles.row}>
-                      <Text style={styles.tableHeadings}>Name</Text>
+        {meetingRooms === [] ? (
+          <View>
+            <Text>No Meetings</Text>
+          </View>
+        ) : (
+          <ScrollView
+            style={{height: hp(75)}}
+            showsVerticalScrollIndicator={false}>
+            {meetingRooms?.map((data: any) => {
+              return (
+                <View style={[styles.box, styles.shadowProp]} key={data.id}>
+                  <TouchableOpacity>
+                    <Image style={styles.editImg} source={EDIT} />
+                  </TouchableOpacity>
+                  <Text style={styles.nameHeading}>{data.title}</Text>
+                  <Text style={styles.headings}>
+                    {new Date(data.bookedTimeIn).toTimeString()}
+                  </Text>
+                  <Text style={styles.headings}>
+                    Confirmation Code:{data.code}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      cancleMeeting(data.id);
+                    }}>
+                    <Text
+                      style={[
+                        styles.cancleMeeting,
+                        {
+                          color:
+                            data.status === 'cancelled' ? 'red' : '#1d39c2',
+                        },
+                      ]}>
+                      {data.status === 'cancelled'
+                        ? 'Canceled Meeting'
+                        : 'Cancel Meeting'}
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={styles.invitees}>Invitees</Text>
+                  <View style={styles.table}>
+                    <View style={styles.tableData}>
+                      <View style={styles.row}>
+                        <Text style={styles.tableHeadings}>Name</Text>
+                      </View>
+                      <View style={styles.row}>
+                        <Text style={styles.tableHeadings}>Email</Text>
+                      </View>
+                      <View style={styles.row}>
+                        <Text style={styles.tableHeadings}>Status</Text>
+                      </View>
                     </View>
-                    <View style={styles.row}>
-                      <Text style={styles.tableHeadings}>Email</Text>
-                    </View>
-                    <View style={styles.row}>
-                      <Text style={styles.tableHeadings}>Status</Text>
-                    </View>
-                  </View>
-                  <View style={styles.tableData}>
-                    <View style={styles.row}>
-                      <Text style={styles.tableDataHeadings}>
-                        Rhonda Elliot
-                      </Text>
-                    </View>
-                    <View style={styles.row}>
-                      <Text style={styles.tableDataHeadings}>
-                        RhondaElliot@gmail.com
-                      </Text>
-                    </View>
-                    <View style={styles.row}>
-                      <Text style={styles.tableDataHeadings}>In Person</Text>
-                    </View>
+                    {data.invitees?.map((invite: any) => {
+                      console.log('Inviteeee===>>>>', invite);
+                      return (
+                        <View style={styles.tableData} key={invite.email}>
+                          <View style={styles.row}>
+                            <Text style={styles.tableDataHeadings}>
+                              {invite.name ? invite.name : '-'}
+                            </Text>
+                          </View>
+                          <View style={styles.row}>
+                            <Text style={styles.tableDataHeadings}>
+                              {invite.name ? invite.name : '-'}
+                            </Text>
+                          </View>
+                          <View style={styles.row}>
+                            <Text style={styles.tableDataHeadings}>
+                              In Person
+                            </Text>
+                          </View>
+                        </View>
+                      );
+                    })}
                   </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
-      {/* <Text style={{marginTop: 'auto'}}>Powered by MyLobby.co</Text> */}
     </SafeAreaView>
   );
 }
@@ -199,10 +268,11 @@ const styles = StyleSheet.create({
     height: 'auto',
     backgroundColor: '#CFCBCB',
     borderWidth: 1,
-    marginTop: 20,
+    marginTop: 10,
     borderRadius: 8,
     borderColor: '#dddddd',
     overflow: 'hidden',
+    marginBottom: hp(6),
   },
   shadowProp: {
     // shadowColor: '#171717',
@@ -277,7 +347,6 @@ const styles = StyleSheet.create({
     padding: hp(0.5),
   },
   cancleMeeting: {
-    color: '#1d39c2',
     marginLeft: wp(2.5),
   },
   editImg: {
