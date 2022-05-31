@@ -2,14 +2,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import {Button} from 'react-native-paper';
-import Store from '../Store';
 import * as RNLocalize from 'react-native-localize';
+import {useRootStoreContext} from '../Store';
+import {observer} from 'mobx-react-lite';
 
-export default function BookNow(props: any) {
+function BookNow(props: any) {
+  const {store, userStore} = useRootStoreContext();
+
   const startDate = new Date(props.route.params.startDate);
   const endDate = new Date(props.route.params.endDate);
-  console.log(props.route.params.endDate);
-  const BACKEND_URL = Store.store.parameters.backendUrl;
+  const BACKEND_URL = store.parameters.backendUrl;
 
   const bookNow = async () => {
     const requestOptions = {
@@ -21,19 +23,19 @@ export default function BookNow(props: any) {
       },
 
       body: JSON.stringify({
-        name: Store.userStore.auth.employee.name,
-        siteName: Store.userStore.auth.siteName,
-        company: Store.userStore.auth.employee.company,
-        phone: Store.userStore.auth.employee.phonesms,
-        email: Store.userStore.auth.employee.email,
-        jobTitle: Store.userStore.auth.employee.jobTitle,
+        name: userStore.auth.employee.name,
+        siteName: userStore.auth.siteName,
+        company: userStore.auth.employee.company,
+        phone: userStore.auth.employee.phonesms,
+        email: userStore.auth.employee.email,
+        jobTitle: userStore.auth.employee.jobTitle,
         isRoom: props.route.params.isRoom,
         isDesk: props.route.params.isDesk,
         isOffice: props.route.params.isOffice,
         bookingType: props.route.params.bookingType,
-        siteId: Store.userStore.auth.siteId,
-        accountId: Store.userStore.auth.employee.accountId,
-        employeeId: Store.userStore.auth.employee.id,
+        siteId: userStore.auth.siteId,
+        accountId: userStore.auth.employee.accountId,
+        employeeId: userStore.auth.employee.id,
         roomId: props.route.params.roomId,
         roomName: props.route.params.roomName,
         bookedTimeIn: new Date(props.route.params.startDate).getTime(),
@@ -41,13 +43,9 @@ export default function BookNow(props: any) {
         timeZone: RNLocalize.getTimeZone(),
       }),
     };
-    console.log('====================================');
-    console.log(requestOptions);
-    console.log('====================================');
     fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
-        console.log(result);
         props.navigation.navigate('Booked', {
           roomName: props.route.params.roomName,
           roomId: props.route.params.roomId,
@@ -58,10 +56,6 @@ export default function BookNow(props: any) {
         });
       })
       .catch(error => {
-        console.log(
-          'Store.userStore.auth.employee.name ===>',
-          Store.userStore.auth.employee.name,
-        );
         console.log(error);
       });
   };
@@ -69,7 +63,7 @@ export default function BookNow(props: any) {
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
-        <Text style={styles.text}>{Store.userStore.auth.employee.name},</Text>
+        <Text style={styles.text}>{userStore.auth.employee.name},</Text>
         <Text style={styles.text}>
           You have selected {props.route.params.roomName}
         </Text>
@@ -139,3 +133,4 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 });
+export default observer(BookNow);

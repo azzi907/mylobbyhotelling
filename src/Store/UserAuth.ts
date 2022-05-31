@@ -1,24 +1,36 @@
-import {observable, action} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MobXRootStore} from '.';
+import {makePersistable} from 'mobx-persist-store';
 
 interface Auth {
   employee: any;
   sites: any;
   siteId: number;
   siteName: string;
+  logout: boolean;
 }
 
 export default class UserAuth {
-  @observable auth: Auth = {
+  auth: Auth = {
     employee: {},
     sites: {},
     siteId: -1,
     siteName: '',
+    logout: true,
   };
 
-  @observable navigation: any;
+  navigation: any;
 
-  @action
+  constructor(public mobXRootStore: MobXRootStore) {
+    makeAutoObservable(this, {});
+    makePersistable(this, {
+      name: 'UserAuth',
+      properties: ['auth', 'navigation'],
+      storage: AsyncStorage,
+    });
+  }
+
   async init() {
     let auth = await AsyncStorage.getItem('auth');
     if (auth) {
@@ -26,15 +38,12 @@ export default class UserAuth {
     }
   }
 
-  @action
   async update(type: string, value: any) {
     let updatedAuth: any = this.auth;
     updatedAuth[type] = value;
-    await AsyncStorage.setItem('auth', JSON.stringify(updatedAuth));
     this.auth = updatedAuth;
   }
 
-  @action
   async updateAll(auth: any) {
     await AsyncStorage.setItem('auth', JSON.stringify(auth));
     this.auth = auth;

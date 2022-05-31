@@ -10,13 +10,15 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React, {useState} from 'react';
-import Store from '../Store';
+import {useRootStoreContext} from '../Store';
 import {Button, Modal, Portal, TextInput} from 'react-native-paper';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import RNCalendarEvents from 'react-native-calendar-events';
+import {observer} from 'mobx-react';
 
-export default function BookingScreen(props: any) {
-  const BACKEND_URL = Store.store.parameters.backendUrl;
+function BookingScreen(props: any) {
+  const {store, userStore} = useRootStoreContext();
+  const BACKEND_URL = store.parameters.backendUrl;
   const [visible, setVisible] = useState(false);
   const [ical, setiIcal] = useState('');
   const showModal = () => setVisible(true);
@@ -30,8 +32,8 @@ export default function BookingScreen(props: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: Store.userStore.auth.employee.id,
-        accountId: Store.userStore.auth.employee.accountId,
+        id: userStore.auth.employee.id,
+        accountId: userStore.auth.employee.accountId,
         ical: ical,
       }),
     };
@@ -49,10 +51,12 @@ export default function BookingScreen(props: any) {
         ToastAndroid.show('Error saving ical', ToastAndroid.LONG);
       });
   };
+  console.log('Account Id ====>', userStore.auth.employee.accountId);
 
   function logout() {
-    Store.userStore.update('site', {});
-    Store.userStore.update('employee', {});
+    userStore.update('site', {});
+    userStore.update('employee', {});
+    userStore.update('logout', true);
     props.navigation.navigate('Init');
   }
   async function calenderEvent(
@@ -99,14 +103,10 @@ export default function BookingScreen(props: any) {
       console.log(error);
     }
   }
+
   return (
     <SafeAreaView style={styles.page}>
-      {/* <TouchableOpacity style={styles.icalButton} onPress={showModal}>
-        <Text style={{color: 'white'}}>Add Calendar</Text>
-      </TouchableOpacity> */}
-      <Text style={styles.welcome}>
-        Hi, {Store.userStore.auth.employee.name}
-      </Text>
+      <Text style={styles.welcome}>Hi, {userStore.auth.employee.name}</Text>
       <Portal>
         <Modal
           visible={visible}
@@ -148,13 +148,13 @@ export default function BookingScreen(props: any) {
         }}>
         Welcome to{' '}
         <Text style={{fontWeight: 'bold'}}>
-          {Store.userStore.auth.sites[0].name}
+          {userStore.auth.sites[0]?.name}
         </Text>{' '}
         Room Booking
       </Text>
       <Image
         source={{
-          uri: `${BACKEND_URL}/api/sites/getLogo/${Store.userStore.auth.sites[0].id}?small=true`,
+          uri: `${BACKEND_URL}/api/sites/getLogo/${userStore.auth.sites[0]?.id}?small=true`,
         }}
         style={styles.companyLogo}
       />
@@ -201,9 +201,9 @@ export default function BookingScreen(props: any) {
         onPress={logout}>
         Log Out
       </Button>
-      <Text style={{marginTop: 'auto', marginBottom: 10}}>
+      {/* <Text style={{marginTop: 'auto', marginBottom: 10}}>
         Powered by MyLobby.co
-      </Text>
+      </Text> */}
     </SafeAreaView>
   );
 }
@@ -225,7 +225,8 @@ const styles = StyleSheet.create({
   companyLogo: {
     width: 150,
     height: 150,
-    marginTop: 20,
+    marginTop: 30,
+    marginBottom: 20,
   },
   buttonText: {
     color: 'white',
@@ -261,3 +262,5 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 });
+
+export default observer(BookingScreen);

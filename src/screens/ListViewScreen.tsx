@@ -39,9 +39,6 @@ export default function ListView(props: any) {
         isOffice: props.route.params.isOffice,
       }),
     };
-    console.log('====================================');
-    console.log(requestOptions);
-    console.log('====================================');
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
@@ -50,7 +47,7 @@ export default function ListView(props: any) {
       })
       .catch(error => {
         console.log(error);
-        ToastAndroid.show('Error saving ical', ToastAndroid.LONG);
+        ToastAndroid.show('Error fetching Available Rooms', ToastAndroid.LONG);
       });
   };
   useEffect(() => {
@@ -73,7 +70,6 @@ export default function ListView(props: any) {
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
-  console.log(props.route.params);
 
   return (
     <SafeAreaView style={styles.page}>
@@ -106,7 +102,7 @@ export default function ListView(props: any) {
                 ...props.route.params,
               });
             }}>
-            <Text style={{fontSize: 20, fontWeight: '600'}}>
+            <Text style={{fontSize: 15, fontWeight: '500'}}>
               Floor Plan View
             </Text>
           </TouchableOpacity>
@@ -121,7 +117,9 @@ export default function ListView(props: any) {
           style={{marginTop: 10, borderRadius: 10}}
         />
         <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
-        <ScrollView style={{height: '75%'}}>
+        <ScrollView
+          style={{height: '75%'}}
+          showsVerticalScrollIndicator={false}>
           {filteredRooms?.map((roomData: any) => {
             return (
               <View style={[styles.box, styles.shadowProp]} key={roomData.id}>
@@ -188,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 80,
     textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '500',
   },
   box: {
     width: '100%',
@@ -196,6 +194,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginTop: 20,
     borderRadius: 30,
+    overflow: 'hidden',
   },
   box2: {
     height: '75%',
@@ -214,7 +213,7 @@ const styles = StyleSheet.create({
   listView: {
     textDecorationLine: 'underline',
     color: '#51D1FA',
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: '600',
   },
   bookNow: {

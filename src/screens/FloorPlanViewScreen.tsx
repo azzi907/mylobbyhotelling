@@ -64,8 +64,6 @@ export default function FloorPlanView(this: any, props: any) {
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
-      console.log('fp ==>', fp);
-
       fp[0].areaRN?.forEach((ar: any) => {
         const isAvailable = rooms.find(
           (room: any) =>
@@ -107,16 +105,16 @@ export default function FloorPlanView(this: any, props: any) {
       .then(result => {
         const floorPlan = result.floorPlans;
         setFloorPlanAll(floorPlan);
-        floorPlan[1].areaRN.forEach((ar: any) => {
+        floorPlan[0].areaRN.forEach((ar: any) => {
           const isAvailable = rooms.find(
             (room: any) =>
-              room.location === floorPlan[1].name &&
+              room.location === floorPlan[0].name &&
               room.name === ar.name &&
               room.isBlocked === false,
           );
           const blocked = rooms.find(
             (room: any) =>
-              room.location === floorPlan[1].name &&
+              room.location === floorPlan[0].name &&
               room.name === ar.name &&
               room.isBlocked === true,
           );
@@ -131,8 +129,8 @@ export default function FloorPlanView(this: any, props: any) {
             ar.prefill = 'red';
           }
         });
-        setArea(floorPlan[1].areaRN);
-        setFloorPlan(floorPlan[1]);
+        setArea(floorPlan[0].areaRN);
+        setFloorPlan(floorPlan[0]);
         const l: any = [];
         floorPlan.map((fp: any) => {
           l.push({label: fp.name, value: fp.name});
@@ -167,7 +165,6 @@ export default function FloorPlanView(this: any, props: any) {
     if (rooms) {
       getFloorPlan();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rooms]);
 
   return (
@@ -203,10 +200,10 @@ export default function FloorPlanView(this: any, props: any) {
                 ...props.route.params,
               });
             }}>
-            <Text style={{fontSize: 20, fontWeight: '600'}}>List View</Text>
+            <Text style={{fontSize: 15, fontWeight: '500'}}>List View</Text>
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: 10}}>
+        <View style={{marginTop: 10, zIndex: 1}}>
           <DropDownPicker
             open={open}
             value={selectedFloorPlan}
@@ -220,7 +217,9 @@ export default function FloorPlanView(this: any, props: any) {
         <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
         {Plan?.file ? (
           <ScrollView horizontal={true}>
-            <ScrollView nestedScrollEnabled>
+            <ScrollView
+              nestedScrollEnabled
+              showsVerticalScrollIndicator={false}>
               <ImageMapper
                 imgHeight={Plan.imageDim[1]}
                 imgWidth={Plan.imageDim[0]}
@@ -306,8 +305,8 @@ const styles = StyleSheet.create({
   floorPlanView: {
     textDecorationLine: 'underline',
     color: '#51D1FA',
-    fontSize: 20,
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '500',
   },
   box: {
     width: '70%',
