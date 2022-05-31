@@ -80,7 +80,7 @@ function BookingScreen(props: any) {
         RNCalendarEvents.checkPermissions();
         RNCalendarEvents.findCalendars();
         const reservation = await RNCalendarEvents.findEventById(
-          eventIdentifier,
+          calendarItemIdentifier,
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
