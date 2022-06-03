@@ -128,9 +128,10 @@ const styles = StyleSheet.create({
   },
   img: {
     padding: hp(1),
-    marginLeft: hp(3),
+    marginLeft: hp(4.1),
   },
   container: {
+    flexDirection: 'column',
     padding: hp(1),
     marginTop: hp(0.5),
   },

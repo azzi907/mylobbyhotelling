@@ -25,10 +25,10 @@ function BookNow(props: any) {
   }, []);
   const bookNow = async () => {
     const requestOptions = {
-      method: ‘POST’,
+      method: 'POST',
       headers: {
-        Accept: ‘application/json’,
-        ‘Content-Type’: ‘application/json’,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         name: userStore.auth.employee.name,
@@ -54,10 +54,10 @@ function BookNow(props: any) {
         timeZone: RNLocalize.getTimeZone(),
       }),
     };
-    fetch(${BACKEND_URL}/api/rooms_reservations/add, requestOptions)
+    fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
-        props.navigation.navigate(‘Booked’, {
+        props.navigation.navigate('Booked', {
           roomName: props.route.params.roomName,
           roomId: props.route.params.roomId,
           date: props.route.params.date,
@@ -82,12 +82,12 @@ function BookNow(props: any) {
       </View>
       <View style={styles.button}>
         <Button
-          color={‘#4299E1’}
+          color={'#4299E1'}
           labelStyle={styles.buttonText}
-          style={{width: ’40%’, borderRadius: 20}}
-          mode=“contained”
+          style={{width: '40%', borderRadius: 20}}
+          mode="contained"
           onPress={() =>
-            props.navigation.navigate(‘SelectViews’, {
+            props.navigation.navigate('SelectViews', {
               ...props.route.params,
             })
           }>
@@ -95,10 +95,10 @@ function BookNow(props: any) {
         </Button>
         <Button
           disabled={invitees === null ? true : false}
-          color={‘#4299E1’}
+          color={'#4299E1'}
           labelStyle={styles.buttonText}
-          style={{width: ’40%’, borderRadius: 20}}
-          mode=“contained”
+          style={{width: '40%', borderRadius: 20}}
+          mode="contained"
           onPress={async () => bookNow()}>
           Book Now
         </Button>
@@ -108,25 +108,25 @@ function BookNow(props: any) {
 }
 const styles = StyleSheet.create({
   page: {
-    width: ’100%’,
-    height: ‘100%’,
-    backgroundColor: ‘white’,
-    alignItems: ‘center’,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+    alignItems: 'center',
   },
   text: {
     padding: 35,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: ‘700’,
-    color: ‘black’,
+    fontWeight: '700',
+    color: 'black',
   },
   buttonText: {
-    color: ‘white’,
-    width: ’100%’,
+    color: 'white',
+    width: '100%',
     fontSize: 15,
     paddingVertical: 10,
-    textAlignVertical: ‘center’,
-    textAlign: ‘center’,
+    textAlignVertical: 'center',
+    textAlign: 'center',
   },
   button: {
     width: '100%',
