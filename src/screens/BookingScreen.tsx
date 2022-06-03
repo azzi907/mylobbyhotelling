@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-native/no-inline-styles */
 import {
@@ -15,6 +16,10 @@ import {Button, Modal, Portal, TextInput} from 'react-native-paper';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import RNCalendarEvents from 'react-native-calendar-events';
 import {observer} from 'mobx-react';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 function BookingScreen(props: any) {
   const {store, userStore} = useRootStoreContext();
@@ -23,6 +28,39 @@ function BookingScreen(props: any) {
   const [ical, setiIcal] = useState('');
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
+
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  React.useEffect(() => {
+    const date = new Date();
+    const month = months[date.getMonth()];
+    const day = days[date.getDay()];
+    const dateNum = date.getDate();
+    const year = date.getFullYear();
+    const dateString = day + ' ' + dateNum + ' ' + month + ' ' + year;
+    userStore.update('date', dateString);
+  }, []);
 
   const saveIcal = async () => {
     const requestOptions = {
@@ -51,7 +89,6 @@ function BookingScreen(props: any) {
         ToastAndroid.show('Error saving ical', ToastAndroid.LONG);
       });
   };
-  console.log('Account Id ====>', userStore.auth.employee.accountId);
 
   function logout() {
     userStore.update('site', {});
@@ -80,7 +117,7 @@ function BookingScreen(props: any) {
         RNCalendarEvents.checkPermissions();
         RNCalendarEvents.findCalendars();
         const reservation = await RNCalendarEvents.findEventById(
-          eventIdentifier,
+          calendarItemIdentifier,
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
@@ -193,7 +230,7 @@ function BookingScreen(props: any) {
         labelStyle={{...styles.buttonText, color: '#4299E1'}}
         style={{
           borderRadius: 20,
-          marginTop: 35,
+          marginTop: hp(3.5),
           borderWidth: 1,
           borderColor: '#4299E1',
         }}
@@ -223,10 +260,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   companyLogo: {
-    width: 150,
-    height: 150,
-    marginTop: 30,
-    marginBottom: 20,
+    width: wp(30),
+    height: hp(25),
+    marginTop: hp(2),
   },
   buttonText: {
     color: 'white',

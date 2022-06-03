@@ -119,7 +119,7 @@ function ListView(props: any) {
           onChangeText={onChangeSearch}
           style={{marginTop: 10, borderRadius: 10}}
         />
-        <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
+        <Text style={{marginTop: 10}}>Today: {userStore.auth.date}</Text>
         <ScrollView
           style={{height: '75%'}}
           showsVerticalScrollIndicator={false}>
@@ -166,7 +166,6 @@ function ListView(props: any) {
           })}
         </ScrollView>
       </View>
-      <Text style={{marginTop: 'auto'}}>Powered by MyLobby.co</Text>
     </SafeAreaView>
   );
 }

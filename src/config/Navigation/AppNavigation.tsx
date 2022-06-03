@@ -12,6 +12,8 @@ import BookedScreen from '../../screens/BookedScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MyMeetingsScreen from '../../screens/MyMeetingsScreen';
 import CustomTabBar from '../../components/CustomBar';
+import FindAColleague from '../../screens/FindAColleagueScreen';
+import SignUpScreen from '../../screens/SignUpScreen';
 
 type StackParamList = {
   Init: undefined;
@@ -25,6 +27,8 @@ type StackParamList = {
   Booked: undefined;
   Home: undefined;
   MyMeetings: undefined;
+  FindColleagues: undefined;
+  SignUp: undefined;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -36,6 +40,7 @@ function MainNavigator() {
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Booking" component={BookingScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
       <Stack.Screen name="Init" component={Init} />
       <Stack.Screen name="Reservation" component={ReservationScreen} />
       <Stack.Screen name="SelectViews" component={SelectViewsScreen} />
@@ -54,7 +59,7 @@ export default () => {
       screenOptions={{headerShown: false}}
       tabBar={props => <CustomTabBar {...props} />}>
       <Tab.Screen name="Main" component={MainNavigator} />
-      <Tab.Screen name="FloorPlanView" component={FloorPLanViewScreen} />
+      <Tab.Screen name="FindColleagues" component={FindAColleague} />
       <Tab.Screen name="MyMeetings" component={MyMeetingsScreen} />
     </Tab.Navigator>
   );

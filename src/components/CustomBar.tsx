@@ -14,18 +14,21 @@ import {observer} from 'mobx-react';
 function CustomTabBar(props: any) {
   const {userStore} = useRootStoreContext();
 
+  const [selectedDesk, setSelectedDesk] = React.useState(false);
+  const [selectedColl, setSelectedColl] = React.useState(false);
+  const [selectedMeet, setSelectedMeet] = React.useState(false);
+
   const navigateToBookingScreen = () => {
     props.navigation.navigate('Booking');
   };
 
   const navigateToFindColleague = () => {
-    props.navigation.navigate('MyMeetings');
+    props.navigation.navigate('FindColleagues');
   };
 
   const navigateToMyMeetings = () => {
     props.navigation.navigate('MyMeetings');
   };
-  console.log('logout ==>>>>', userStore.auth.logout);
 
   return (
     <View
@@ -33,22 +36,77 @@ function CustomTabBar(props: any) {
         ...styles.TabBarMainContainer,
         display: userStore.auth.logout ? 'none' : 'flex',
       }}>
-      <TouchableOpacity onPress={navigateToBookingScreen}>
+      <TouchableOpacity
+        onPress={() => {
+          navigateToBookingScreen();
+          setSelectedDesk(true);
+          setSelectedColl(false);
+          setSelectedMeet(false);
+        }}>
         <View style={styles.container}>
-          <Image style={styles.img} source={BOOK_DESK} />
-          <Text style={styles.textStyle}>Book A Desk</Text>
+          <Image
+            style={[
+              styles.img,
+              {tintColor: selectedDesk ? '#51D1FA' : '#ffffff'},
+            ]}
+            source={BOOK_DESK}
+          />
+          <Text
+            style={[
+              styles.textStyle,
+              {color: selectedDesk ? '#51D1FA' : '#ffffff'},
+            ]}>
+            Book A Desk
+          </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={navigateToFindColleague}>
+      <TouchableOpacity
+        onPress={() => {
+          navigateToFindColleague();
+          setSelectedColl(true);
+
+          setSelectedMeet(false);
+          setSelectedDesk(false);
+        }}>
         <View style={styles.container}>
-          <Image style={[styles.img, {marginLeft: wp(10)}]} source={USER} />
-          <Text style={styles.textStyle}>Find A Colleague</Text>
+          <Image
+            style={[
+              [styles.img, {tintColor: selectedColl ? '#51D1FA' : '#ffffff'}],
+              {marginLeft: wp(10)},
+            ]}
+            source={USER}
+          />
+          <Text
+            style={[
+              styles.textStyle,
+              {color: selectedColl ? '#51D1FA' : '#ffffff'},
+            ]}>
+            Find A Colleague
+          </Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={navigateToMyMeetings}>
-        <View style={[styles.container, {marginTop: hp(1.5)}]}>
-          <Image style={styles.img} source={MY_MEET} />
-          <Text style={styles.textStyle}>My Meetings</Text>
+      <TouchableOpacity
+        onPress={() => {
+          navigateToMyMeetings();
+          setSelectedMeet(true);
+          setSelectedDesk(false);
+          setSelectedColl(false);
+        }}>
+        <View style={[styles.container, {marginTop: hp(1)}]}>
+          <Image
+            style={[
+              styles.img,
+              {tintColor: selectedMeet ? '#51D1FA' : '#ffffff'},
+            ]}
+            source={MY_MEET}
+          />
+          <Text
+            style={[
+              styles.textStyle,
+              {color: selectedMeet ? '#51D1FA' : '#ffffff'},
+            ]}>
+            My Meetings
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -74,7 +132,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: hp(1),
-    marginTop: hp(1),
+    marginTop: hp(0.5),
   },
 });
 export default observer(CustomTabBar);

@@ -5,9 +5,8 @@ import {Button} from 'react-native-paper';
 import * as RNLocalize from 'react-native-localize';
 import {useRootStoreContext} from '../Store';
 import {observer} from 'mobx-react-lite';
-
+import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 function BookNow(props: any) {
-  console.log('Props ====>', props.route.params);
   const [invitees, setInvitees] = useState(null);
   const {store, userStore} = useRootStoreContext();
 
@@ -40,6 +39,7 @@ function BookNow(props: any) {
         name: userStore.auth.employee.name,
         title: props.route.params.title,
         invitees: invitees,
+        location: props.route.params.location,
         siteName: userStore.auth.sites[0]?.name,
         company: userStore.auth.employee.company,
         phone: userStore.auth.employee.phonesms,
@@ -109,9 +109,6 @@ function BookNow(props: any) {
           Book Now
         </Button>
       </View>
-      <Text style={{marginTop: 'auto', marginBottom: 10}}>
-        Powered by MyLobby.co
-      </Text>
     </SafeAreaView>
   );
 }
@@ -124,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    padding: 40,
+    padding: 35,
     textAlign: 'center',
     fontSize: 20,
     fontWeight: '700',
@@ -139,11 +136,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   button: {
-    marginTop: 15,
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginTop: hp(2.5),
   },
   container: {
     marginTop: 50,
