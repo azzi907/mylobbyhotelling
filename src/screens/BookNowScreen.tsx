@@ -23,6 +23,8 @@ function BookNow(props: any) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log('Params ==>', props.route.params);
+
   const bookNow = async () => {
     const requestOptions = {
       method: 'POST',
@@ -52,11 +54,16 @@ function BookNow(props: any) {
         bookedTimeIn: new Date(props.route.params.startDate).getTime(),
         bookedTimeOut: new Date(props.route.params.endDate).getTime(),
         timeZone: RNLocalize.getTimeZone(),
+        meetingId: props.route.params.meetingId,
       }),
     };
+    console.log('request Options', requestOptions);
+
     fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
+        console.log('result reservation===>', result);
+
         props.navigation.navigate('Booked', {
           roomName: props.route.params.roomName,
           roomId: props.route.params.roomId,
@@ -81,18 +88,20 @@ function BookNow(props: any) {
         <Text style={styles.text}>To: {endDate.toString()}</Text>
       </View>
       <View style={styles.button}>
-        <Button
-          color={'#4299E1'}
-          labelStyle={styles.buttonText}
-          style={{width: '40%', borderRadius: 20}}
-          mode="contained"
-          onPress={() =>
-            props.navigation.navigate('SelectViews', {
-              ...props.route.params,
-            })
-          }>
-          Modify
-        </Button>
+        {props.route.params.isQrScanned !== true ? (
+          <Button
+            color={'#4299E1'}
+            labelStyle={styles.buttonText}
+            style={{width: '40%', borderRadius: 20}}
+            mode="contained"
+            onPress={() =>
+              props.navigation.navigate('SelectViews', {
+                ...props.route.params,
+              })
+            }>
+            Modify
+          </Button>
+        ) : null}
         <Button
           disabled={invitees === null ? true : false}
           color={'#4299E1'}

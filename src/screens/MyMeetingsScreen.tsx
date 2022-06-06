@@ -10,10 +10,13 @@ import {
   SafeAreaView,
   ScrollView,
   ToastAndroid,
+  Platform,
 } from 'react-native';
 import {useRootStoreContext} from '../Store';
 import {Searchbar} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import RNCalendarEvents from 'react-native-calendar-events';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -120,6 +123,69 @@ function MyMeetings(props: any) {
       });
     }
   }, [dateFilter]);
+  const editMeeting = async (data: any) => {
+    const result = await AddCalendarEvent.presentEventEditingDialog({
+      eventId: data.meetingId,
+    });
+    console.log('Result ======> ', result);
+
+    if (
+      (result.action === 'SAVED' && Platform.OS === 'ios') ||
+      (result.action === 'CANCELED' && Platform.OS === 'android')
+    ) {
+      const reservation = await RNCalendarEvents.findEventById(data.meetingId);
+      console.log('Reservation ====> ', reservation);
+
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userStore.auth.employee.name,
+          title: reservation?.title,
+          invitees: reservation?.attendees,
+          location: reservation?.location,
+          siteName: userStore.auth.sites[0]?.name,
+          company: userStore.auth.employee.company,
+          phone: userStore.auth.employee.phonesms,
+          email: userStore.auth.employee.email,
+          jobTitle: userStore.auth.employee.jobTitle,
+          isRoom: data.isRoom,
+          isDesk: data.isDesk,
+          isOffice: data.isOffice,
+          bookingType: data.bookingType,
+          siteId: userStore.auth.siteId,
+          accountId: userStore.auth.employee.accountId,
+          employeeId: userStore.auth.employee.id,
+          roomId: data.roomId,
+          roomName: data.roomName,
+          bookedTimeIn: new Date(
+            reservation?.startDate ? reservation?.startDate : '',
+          ).getTime(),
+          bookedTimeOut: new Date(
+            reservation?.endDate ? reservation?.endDate : '',
+          ).getTime(),
+          meetingId: reservation?.id,
+        }),
+      };
+      fetch(
+        `${BACKEND_URL}/api/rooms_reservations/edit/${data.id}`,
+        requestOptions,
+      )
+        .then(response => response.json())
+        .then((r: any) => {
+          getMeetings();
+          // props.navigation.navigate('UpdatedMeeting', {
+          //   reservations: r.reservation,
+          // });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
 
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
@@ -203,10 +269,16 @@ function MyMeetings(props: any) {
             {filteredRooms?.map((data: any) => {
               return (
                 <View style={[styles.box, styles.shadowProp]} key={data.id}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      editMeeting(data);
+                    }}>
                     <Image style={styles.editImg} source={EDIT} />
                   </TouchableOpacity>
                   <Text style={styles.nameHeading}>{data.title}</Text>
+                  <Text style={styles.headings}>
+                    {`${new Date(data.bookedTimeIn).toDateString()}`}
+                  </Text>
                   <Text style={styles.headings}>
                     {`${moment(new Date(data.bookedTimeIn).toTimeString(), [
                       'HH.mm',

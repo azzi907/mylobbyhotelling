@@ -14,6 +14,8 @@ import MyMeetingsScreen from '../../screens/MyMeetingsScreen';
 import CustomTabBar from '../../components/CustomBar';
 import FindAColleague from '../../screens/FindAColleagueScreen';
 import SignUpScreen from '../../screens/SignUpScreen';
+import UpdatedMeetingScreen from '../../screens/UpdatedMeetingScreen';
+import QrScreen from '../../screens/QrScreen';
 
 type StackParamList = {
   Init: undefined;
@@ -29,6 +31,8 @@ type StackParamList = {
   MyMeetings: undefined;
   FindColleagues: undefined;
   SignUp: undefined;
+  UpdatedMeeting: undefined;
+  QrScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -48,6 +52,7 @@ function MainNavigator() {
       <Stack.Screen name="FloorPlanView" component={FloorPLanViewScreen} />
       <Stack.Screen name="BookNow" component={BookNowScreen} />
       <Stack.Screen name="Booked" component={BookedScreen} />
+      <Stack.Screen name="UpdatedMeeting" component={UpdatedMeetingScreen} />
     </Stack.Navigator>
   );
 }
@@ -61,6 +66,7 @@ export default () => {
       <Tab.Screen name="Main" component={MainNavigator} />
       <Tab.Screen name="FindColleagues" component={FindAColleague} />
       <Tab.Screen name="MyMeetings" component={MyMeetingsScreen} />
+      <Tab.Screen name="QrScreen" component={QrScreen} />
     </Tab.Navigator>
   );
 };

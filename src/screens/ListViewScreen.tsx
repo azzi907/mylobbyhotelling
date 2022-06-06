@@ -73,7 +73,6 @@ function ListView(props: any) {
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>

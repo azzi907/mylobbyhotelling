@@ -131,6 +131,7 @@ function BookingScreen(props: any) {
           isRoom: isRoom,
           isOffice: isOffice,
           isDesk: isDesk,
+          meetingId: calendarItemIdentifier,
         });
       } else {
         props.navigation.navigate('Init');
