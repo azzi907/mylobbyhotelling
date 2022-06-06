@@ -9,6 +9,7 @@ interface Auth {
   siteId: number;
   siteName: string;
   logout: boolean;
+  date: '';
 }
 
 export default class UserAuth {
@@ -18,6 +19,7 @@ export default class UserAuth {
     siteId: -1,
     siteName: '',
     logout: true,
+    date: '',
   };
 
   navigation: any;

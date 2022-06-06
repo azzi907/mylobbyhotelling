@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,50 +7,11 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
-  useWindowDimensions,
 } from 'react-native';
 
 export default function SelectViews(props: any) {
   const MENU_BAR = require('../../images/list-view.png');
   const LOC_IMG = require('../../images/floor-plan-view.png');
-  const [date, setDate] = React.useState('');
-  const dimensions = useWindowDimensions();
-
-  console.log(props.route.params);
-
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  const days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
-  useEffect(() => {
-    const date = new Date();
-    const month = months[date.getMonth()];
-    const day = days[date.getDay()];
-    const dateNum = date.getDate();
-    const year = date.getFullYear();
-    const dateString = day + ' ' + dateNum + ' ' + month + ' ' + year;
-    setDate(dateString);
-  }, []);
-  console.log('date==>', date);
 
   return (
     <SafeAreaView style={styles.page}>
@@ -61,7 +22,6 @@ export default function SelectViews(props: any) {
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('ListView', {
-              date: date,
               ...props.route.params,
             });
           }}>
@@ -80,7 +40,6 @@ export default function SelectViews(props: any) {
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('FloorPlanView', {
-              date: date,
               ...props.route.params,
             });
           }}>

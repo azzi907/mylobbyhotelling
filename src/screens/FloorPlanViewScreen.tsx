@@ -65,6 +65,8 @@ function FloorPlanView(this: any, props: any) {
   };
 
   React.useEffect(() => {
+    console.log('Selected Floor Plan ===>', selectedFloorPlan);
+
     if (selectedFloorPlan) {
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
@@ -155,6 +157,7 @@ function FloorPlanView(this: any, props: any) {
         ...props.route.params,
         roomId: resource.id,
         roomName: resource.name,
+        selectedFloorPlan: selectedFloorPlan,
       });
     } else if (item.fill === 'yellow') {
       ToastAndroid.show(
@@ -219,7 +222,7 @@ function FloorPlanView(this: any, props: any) {
             placeholder="Select Floor Plan"
           />
         </View>
-        <Text style={{marginTop: 10}}>Today: {props.route.params.date}</Text>
+        <Text style={{marginTop: 10}}>Today: {userStore.auth.date}</Text>
         {Plan?.file ? (
           <ScrollView horizontal={true}>
             <ScrollView
@@ -277,9 +280,6 @@ function FloorPlanView(this: any, props: any) {
           </View>
         </View>
       </View>
-      <Text style={{marginTop: 'auto', marginBottom: 10}}>
-        Powered by MyLobby.co
-      </Text>
     </SafeAreaView>
   );
 }

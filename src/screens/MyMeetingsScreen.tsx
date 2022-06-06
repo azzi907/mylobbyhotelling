@@ -20,6 +20,7 @@ import {
 } from 'react-native-responsive-screen';
 import {observer} from 'mobx-react';
 import {useIsFocused} from '@react-navigation/native';
+import moment from 'moment';
 
 function MyMeetings(props: any) {
   const {store, userStore} = useRootStoreContext();
@@ -28,10 +29,13 @@ function MyMeetings(props: any) {
   const EDIT = require('../../images/edit.png');
   const [searchQuery, setSearchQuery] = React.useState('');
   const [date, setDate] = useState(new Date());
+  const [dateFilter, setDateFilter] = useState<any>(null);
+
   const [open, setOpen] = useState(false);
   const CALENDAR = require('../../images/calendar-icon.png');
 
   const [meetingRooms, setMeetingRooms] = useState<any>(null);
+  const [filteredRooms, setFilteredRooms] = useState<any>([]);
   const BACKEND_URL = store.parameters.backendUrl;
   const isFocused = useIsFocused();
   const getMeetings = async () => {
@@ -49,20 +53,19 @@ function MyMeetings(props: any) {
       .then(response => response.json())
       .then(result => {
         setMeetingRooms(result.reservations);
+        setFilteredRooms(result.reservations);
       })
       .catch(error => {
         console.log(error);
         ToastAndroid.show('Error fetching meeting rooms', ToastAndroid.LONG);
       });
   };
-  console.log(isFocused);
 
   useEffect(() => {
     if (isFocused) {
       getMeetings();
     }
   }, [isFocused]);
-  console.log('Meeting Rooms===>', JSON.stringify(meetingRooms));
   async function cancleMeeting(id: any) {
     const requestOptions = {
       method: 'POST',
@@ -77,7 +80,7 @@ function MyMeetings(props: any) {
     )
       .then(response => response.json())
       .then(result => {
-        console.log('Result Cancle ====>', result.status);
+        console.log(result);
         getMeetings();
       })
       .catch(error => {
@@ -86,7 +89,7 @@ function MyMeetings(props: any) {
       });
   }
   useEffect(() => {
-    setMeetingRooms(() => {
+    setFilteredRooms(() => {
       if (searchQuery) {
         const filteredData = meetingRooms.filter((element: any) => {
           return element.title
@@ -99,6 +102,24 @@ function MyMeetings(props: any) {
       }
     });
   }, [searchQuery]);
+  useEffect(() => {
+    if (dateFilter) {
+      setFilteredRooms(() => {
+        if (filteredRooms) {
+          const newDate = new Date(dateFilter).setUTCSeconds(0);
+          const filteredData = filteredRooms.filter((element: any) => {
+            const dateCheck = new Date(element.bookedTimeIn).setUTCSeconds(0);
+            if (newDate === dateCheck) {
+              return element;
+            }
+          });
+          return filteredData;
+        } else {
+          return meetingRooms;
+        }
+      });
+    }
+  }, [dateFilter]);
 
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
@@ -121,6 +142,20 @@ function MyMeetings(props: any) {
           style={{alignSelf: 'center', fontWeight: '700', fontSize: hp(3.75)}}>
           My Meetings
         </Text>
+        <TouchableOpacity
+          onPress={() => {
+            setFilteredRooms(meetingRooms);
+            setDateFilter(null);
+          }}>
+          <Text
+            style={{
+              color: 'red',
+              marginLeft: 'auto',
+              textDecorationLine: 'underline',
+            }}>
+            Clear Filters
+          </Text>
+        </TouchableOpacity>
         <View style={styles.searchContainer}>
           <View style={{width: '55%'}}>
             <Searchbar
@@ -131,11 +166,13 @@ function MyMeetings(props: any) {
               style={{marginTop: 10, borderRadius: 10}}
             />
           </View>
-          <View style={{width: '43%'}}>
+          <View style={{width: wp(42)}}>
             <TouchableOpacity style={styles.date} onPress={() => setOpen(true)}>
               <View style={{flexDirection: 'row'}}>
                 <Text style={styles.dateInputText}>
-                  {date.toDateString() !== null ? date.toDateString() : 'Date:'}
+                  {date !== null
+                    ? date?.toDateString()
+                    : new Date().toDateString()}
                 </Text>
                 <Image
                   style={{marginTop: 12, marginLeft: 15}}
@@ -149,6 +186,7 @@ function MyMeetings(props: any) {
                 onConfirm={newdate => {
                   setOpen(false);
                   setDate(newdate);
+                  setDateFilter(newdate);
                 }}
                 onCancel={() => {
                   setOpen(false);
@@ -157,16 +195,12 @@ function MyMeetings(props: any) {
             </TouchableOpacity>
           </View>
         </View>
-        <Text style={{marginTop: 10}}>Today:</Text>
-        {meetingRooms === [] ? (
-          <View>
-            <Text>No Meetings</Text>
-          </View>
-        ) : (
+        <Text style={{marginTop: 10}}>Today: {userStore.auth.date}</Text>
+        {filteredRooms != null && filteredRooms.length ? (
           <ScrollView
             style={{height: hp(75)}}
             showsVerticalScrollIndicator={false}>
-            {meetingRooms?.map((data: any) => {
+            {filteredRooms?.map((data: any) => {
               return (
                 <View style={[styles.box, styles.shadowProp]} key={data.id}>
                   <TouchableOpacity>
@@ -174,7 +208,12 @@ function MyMeetings(props: any) {
                   </TouchableOpacity>
                   <Text style={styles.nameHeading}>{data.title}</Text>
                   <Text style={styles.headings}>
-                    {new Date(data.bookedTimeIn).toTimeString()}
+                    {`${moment(new Date(data.bookedTimeIn).toTimeString(), [
+                      'HH.mm',
+                    ]).format('hh:mm a')} - ${moment(
+                      new Date(data.bookedTimeOut).toTimeString(),
+                      ['HH.mm'],
+                    ).format('hh:mm a')}`}
                   </Text>
                   <Text style={styles.headings}>
                     Confirmation Code:{data.code}
@@ -210,7 +249,6 @@ function MyMeetings(props: any) {
                       </View>
                     </View>
                     {data.invitees?.map((invite: any) => {
-                      console.log('Inviteeee===>>>>', invite);
                       return (
                         <View style={styles.tableData} key={invite.email}>
                           <View style={styles.row}>
@@ -236,6 +274,10 @@ function MyMeetings(props: any) {
               );
             })}
           </ScrollView>
+        ) : (
+          <View style={styles.noMeetings}>
+            <Text style={styles.noMeetingsText}>No Meetings</Text>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -285,7 +327,7 @@ const styles = StyleSheet.create({
     fontSize: wp(3.1),
   },
   date: {
-    height: hp(7),
+    height: 48,
     width: '100%',
     marginTop: 10,
     borderWidth: 3,
@@ -294,19 +336,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   dateText: {
-    fontSize: wp(3.5),
-    padding: hp(1.5),
+    fontSize: hp(3.5),
+    padding: hp(4),
   },
   dateInputText: {
-    fontSize: hp(1.75),
-    paddingTop: hp(1.5),
+    fontSize: hp(1.7),
+    paddingTop: 13,
     marginLeft: wp(2.5),
   },
   nameHeading: {
     fontSize: wp(5),
     fontWeight: '700',
     color: 'black',
-    padding: 8,
+    paddingLeft: 8,
+    paddingBottom: 8,
   },
   headings: {
     fontSize: wp(4.5),
@@ -353,8 +396,15 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginLeft: 'auto',
     padding: hp(1.1),
-    marginRight: wp(2),
-    marginTop: hp(0.5),
+    marginRight: wp(3),
+    marginTop: hp(0.9),
+  },
+  noMeetings: {
+    alignSelf: 'center',
+    marginTop: hp(25),
+  },
+  noMeetingsText: {
+    fontSize: hp(3),
   },
 });
 export default observer(MyMeetings);

@@ -1,4 +1,4 @@
-import {action, makeAutoObservable} from 'mobx';
+import {makeAutoObservable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MobXRootStore from '.';
 import {makePersistable} from 'mobx-persist-store';
@@ -7,7 +7,7 @@ interface Parameter {
   backendUrl:
     | 'https://eme.my-lobby.com'
     | 'https://admin.my-lobby.com'
-    | 'http://192.168.5.47:3000';
+    | 'http://192.168.5.37:3000';
 }
 
 export default class State {
