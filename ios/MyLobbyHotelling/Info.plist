@@ -22,8 +22,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -37,10 +37,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>App wants to access Music library</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires access to the calendar</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Your own description of the purpose</string>
+	<string>This app require your camera permissions to SCAN QR </string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires access to Contacts</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -49,6 +51,10 @@
 	<string>This app requires access to Location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app requires access to Location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App needs your Persmission to Access your Photo Library</string>
+	<key>NSSiriUsageDescription</key>
+	<string>App wants to access Siri</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

@@ -5,7 +5,6 @@ import React from 'react';
 import USER from '../../images/user.png';
 import BOOK_DESK from '../../images/Union.png';
 import MY_MEET from '../../images/icon.png';
-import QR from '../../images/qr-code.png';
 
 import {useRootStoreContext} from '../Store';
 import {
@@ -19,7 +18,6 @@ function CustomTabBar(props: any) {
   const [selectedDesk, setSelectedDesk] = React.useState(false);
   const [selectedColl, setSelectedColl] = React.useState(false);
   const [selectedMeet, setSelectedMeet] = React.useState(false);
-  const [selectedQr, setSelectedQr] = React.useState(false);
 
   const navigateToBookingScreen = () => {
     props.navigation.navigate('Booking');
@@ -32,11 +30,6 @@ function CustomTabBar(props: any) {
   const navigateToMyMeetings = () => {
     props.navigation.navigate('MyMeetings');
   };
-
-  const navigateToQRScreen = () => {
-    props.navigation.navigate('QrScreen');
-  };
-
   return (
     <View
       style={{
@@ -46,7 +39,6 @@ function CustomTabBar(props: any) {
       <TouchableOpacity
         onPress={() => {
           navigateToBookingScreen();
-          setSelectedQr(false);
           setSelectedDesk(true);
           setSelectedColl(false);
           setSelectedMeet(false);
@@ -72,7 +64,6 @@ function CustomTabBar(props: any) {
         onPress={() => {
           navigateToFindColleague();
           setSelectedColl(true);
-          setSelectedQr(false);
           setSelectedMeet(false);
           setSelectedDesk(false);
         }}>
@@ -95,33 +86,7 @@ function CustomTabBar(props: any) {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          navigateToQRScreen();
-          setSelectedQr(true);
-          setSelectedMeet(false);
-          setSelectedDesk(false);
-          setSelectedColl(false);
-        }}>
-        <View style={[styles.container, {marginTop: hp(1)}]}>
-          <Image
-            style={[
-              styles.imgQR,
-              {tintColor: selectedQr ? '#51D1FA' : '#ffffff'},
-            ]}
-            source={QR}
-          />
-          <Text
-            style={[
-              styles.textStyle,
-              {color: selectedQr ? '#51D1FA' : '#ffffff'},
-            ]}>
-            Scan QR
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
           navigateToMyMeetings();
-          setSelectedQr(false);
           setSelectedMeet(true);
           setSelectedDesk(false);
           setSelectedColl(false);
