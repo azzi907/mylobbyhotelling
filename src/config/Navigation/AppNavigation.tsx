@@ -16,6 +16,11 @@ import FindAColleague from '../../screens/FindAColleagueScreen';
 import SignUpScreen from '../../screens/SignUpScreen';
 import UpdatedMeetingScreen from '../../screens/UpdatedMeetingScreen';
 import QrScreen from '../../screens/QrScreen';
+import QrReservation from '../../screens/QrReservation';
+import QrExistingReservation from '../../screens/QrExistingReservation';
+import QrReservationLogIn from '../../screens/QrReservationLogInScreen';
+import QrReservationNotFound from '../../screens/QrReservationNotFoundScreen';
+import QrBookingNotAvailable from '../../screens/QrBookingNotAvailable';
 
 type StackParamList = {
   Init: undefined;
@@ -33,6 +38,12 @@ type StackParamList = {
   SignUp: undefined;
   UpdatedMeeting: undefined;
   QrScreen: undefined;
+  QrReservation: undefined;
+  QrExistingReservation: undefined;
+  QrReservationLogIn : undefined;
+  QrReservationNotFound : undefined;
+  QrBookingNotAvailable : undefined;
+
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -53,6 +64,12 @@ function MainNavigator() {
       <Stack.Screen name="BookNow" component={BookNowScreen} />
       <Stack.Screen name="Booked" component={BookedScreen} />
       <Stack.Screen name="UpdatedMeeting" component={UpdatedMeetingScreen} />
+      <Stack.Screen name="QrReservation" component={QrReservation} />
+      <Stack.Screen name="QrExistingReservation" component={QrExistingReservation} />
+      <Stack.Screen name="QrReservationLogIn" component={QrReservationLogIn} />
+      <Stack.Screen name="QrReservationNotFound" component={QrReservationNotFound} />
+      <Stack.Screen name="QrBookingNotAvailable" component={QrBookingNotAvailable} />
+      
     </Stack.Navigator>
   );
 }

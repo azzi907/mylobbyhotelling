@@ -12,7 +12,7 @@ import {
 export default function SelectViews(props: any) {
   const MENU_BAR = require('../../images/list-view.png');
   const LOC_IMG = require('../../images/floor-plan-view.png');
-
+  console.log("Props ====> " , props.route.params);
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -25,7 +25,7 @@ export default function SelectViews(props: any) {
               ...props.route.params,
             });
           }}>
-          <View style={[styles.box, styles.shadowProp]}>
+          <View style={styles.box}>
             <Image style={styles.menuimg} source={MENU_BAR} />
             <Text
               style={{
@@ -43,7 +43,7 @@ export default function SelectViews(props: any) {
               ...props.route.params,
             });
           }}>
-          <View style={[styles.box, styles.shadowProp]}>
+          <View style={styles.box}>
             <Image style={styles.menuimg} source={LOC_IMG} />
             <Text
               style={{
@@ -87,13 +87,6 @@ const styles = StyleSheet.create({
   },
   menuimg: {
     marginLeft: 10,
-  },
-  shadowProp: {
-    // shadowColor: '#171717',
-    // shadowOffset: {width: -2, height: 4},
-    // shadowOpacity: 1,
-    // shadowRadius: 3,
-    // elevation: 2,
   },
   container: {
     display: 'flex',

@@ -26,6 +26,7 @@
     "react-native": "0.68.2",
     "react-native-add-calendar-event": "^4.0.0",
     "react-native-animated-loader": "0.0.9",
+    "react-native-blink-view": "^0.0.6",
     "react-native-calendar-events": "^2.2.0",
     "react-native-camera": "^4.2.1",
     "react-native-date-picker": "^4.2.2",

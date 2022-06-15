@@ -27,53 +27,18 @@ function QrScreen(props: any) {
         }
       } else {
         const bookingType =
-          resultt.isDesk === true
-            ? 'Booked Meeting Desk'
-            : resultt.isRoom === true
-            ? 'Booked Meeting Room'
-            : 'Booked Meeting Office';
+        resultt.isDesk === true
+          ? 'Booked Meeting Desk'
+          : resultt.isRoom === true
+          ? 'Booked Meeting Room'
+          : 'Booked Meeting Office';
 
-        const eventConfig: AddCalendarEvent.CreateOptions = {
-          title: '',
-          location: '',
-        };
-        const result = await AddCalendarEvent.presentEventCreatingDialog(
-          eventConfig,
-        );
-
-        if (result.action === 'SAVED') {
-          const {calendarItemIdentifier} = result;
-          RNCalendarEvents.checkPermissions();
-          RNCalendarEvents.findCalendars();
-          const reservation = await RNCalendarEvents.findEventById(
-            calendarItemIdentifier,
-          );
-          const invitees = reservation?.attendees?.slice(1);
-          props.navigation.navigate('BookNow', {
-            startDate: reservation?.startDate,
-            endDate: reservation?.endDate,
-            title: reservation?.title,
-            location: reservation?.location,
-            notes: reservation?.description,
-            invitees: invitees,
-            bookingType: bookingType,
-            isRoom: resultt.isRoom ? resultt.isRoom : false,
-            isOffice: resultt.isOffice ? resultt.isOffice : false,
-            isDesk: resultt.isDesk ? resultt.isDesk : false,
-            meetingId: calendarItemIdentifier,
-            isQrScanned: true,
-            roomId: resultt.roomId
-              ? resultt.roomId
-              : resultt.OfficeId
-              ? resultt.OfficeId
-              : resultt.deskId,
-            roomName: resultt.roomName
-              ? resultt.roomName
-              : resultt.officeName
-              ? resultt.officeName
-              : resultt.deskName,
-          });
-        }
+        props.navigation.navigate('QrReservation' , {
+          QrData : resultt,
+          bookingType: bookingType, 
+        });
+       
+        
       }
     }
   };

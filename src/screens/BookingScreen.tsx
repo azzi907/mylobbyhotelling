@@ -112,8 +112,6 @@ function BookingScreen(props: any) {
       const result = await AddCalendarEvent.presentEventCreatingDialog(
         eventConfig,
       );
-      console.log(result);
-
       if (result.action === 'SAVED') {
         const {calendarItemIdentifier, eventIdentifier} = result;
         RNCalendarEvents.checkPermissions();
@@ -123,7 +121,7 @@ function BookingScreen(props: any) {
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
-          startDate: reservation?.startDate,
+           startDate: reservation?.startDate,
           endDate: reservation?.endDate,
           title: reservation?.title,
           location: reservation?.location,

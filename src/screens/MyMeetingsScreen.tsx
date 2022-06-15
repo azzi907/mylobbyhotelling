@@ -11,6 +11,7 @@ import {
   ScrollView,
   ToastAndroid,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import {useRootStoreContext} from '../Store';
 import {Searchbar} from 'react-native-paper';
@@ -27,7 +28,7 @@ import moment from 'moment';
 
 function MyMeetings(props: any) {
   const {store, userStore} = useRootStoreContext();
-
+  const [refreshing, setRefreshing] = React.useState(false);
   const BACK_ICON = require('../../images/back-icon.png');
   const EDIT = require('../../images/edit.png');
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -190,6 +191,16 @@ function MyMeetings(props: any) {
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
+  const wait = (timeout : any) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() =>{ 
+    getMeetings();
+    setRefreshing(false)
+  });
+  }, []);
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -265,7 +276,13 @@ function MyMeetings(props: any) {
         {filteredRooms != null && filteredRooms.length ? (
           <ScrollView
             style={{height: hp(75)}}
-            showsVerticalScrollIndicator={false}>
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }>
             {filteredRooms?.map((data: any) => {
               return (
                 <View style={[styles.box, styles.shadowProp]} key={data.id}>
@@ -334,8 +351,27 @@ function MyMeetings(props: any) {
                             </Text>
                           </View>
                           <View style={styles.row}>
-                            <Text style={styles.tableDataHeadings}>
-                              In Person
+                            <Text
+                              style={[
+                                styles.tableDataHeadings,
+                                {
+                                  color:
+                                    invite.status === 'in_person'
+                                      ? '#01620B'
+                                      : invite.status === 'virtual'
+                                      ? '#1339C2'
+                                      : invite.status === 'declined'
+                                      ? '#FF0000'
+                                      : '#000000',
+                                },
+                              ]}>
+                              {invite.status === 'in_person'
+                                ? 'In Person'
+                                : invite.status === 'virtual'
+                                ? 'Virtual'
+                                : invite.status === 'declined'
+                                ? 'Declined'
+                                : 'Pending'}
                             </Text>
                           </View>
                         </View>
