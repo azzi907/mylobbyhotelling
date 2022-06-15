@@ -21,54 +21,142 @@ function BookNow(props: any) {
       });
       setInvitees(arr);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const bookNow = async () => {
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: userStore.auth.employee.name,
-        title: props.route.params.title,
-        invitees: invitees,
-        location: props.route.params.location,
-        siteName: userStore.auth.sites[0]?.name,
-        company: userStore.auth.employee.company,
-        phone: userStore.auth.employee.phonesms,
-        email: userStore.auth.employee.email,
-        jobTitle: userStore.auth.employee.jobTitle,
-        isRoom: props.route.params.isRoom,
-        isDesk: props.route.params.isDesk,
-        isOffice: props.route.params.isOffice,
-        bookingType: props.route.params.bookingType,
-        siteId: userStore.auth.siteId,
-        accountId: userStore.auth.employee.accountId,
-        employeeId: userStore.auth.employee.id,
-        roomId: props.route.params.roomId,
-        roomName: props.route.params.roomName,
-        bookedTimeIn: new Date(props.route.params.startDate).getTime(),
-        bookedTimeOut: new Date(props.route.params.endDate).getTime(),
-        timeZone: RNLocalize.getTimeZone(),
-      }),
-    };
-    fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
-      .then(response => response.json())
-      .then((result: any) => {
-        props.navigation.navigate('Booked', {
-          roomName: props.route.params.roomName,
-          roomId: props.route.params.roomId,
-          date: props.route.params.date,
-          startDate: startDate.toString(),
-          endDate: endDate.toString(),
-          evCode: result?.reservation?.code,
+    const newStartDate = new Date(props.route.params.startDate).setSeconds(
+      0,
+      0,
+    );
+    const newEndDate = new Date(props.route.params.endDate).setSeconds(0, 0);
+    if (props.route.params.isQrScanned) {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: props.route.params.roomId,
+          startTime: newStartDate,
+          endTime: newEndDate,
+          isRoom: props.route.params.isRoom,
+          isDesk: props.route.params.isDesk,
+          isOffice: props.route.params.isOffice,
+        }),
+      };
+      fetch(`${BACKEND_URL}/api/rooms_reservations/ifavailable`, requestOptions)
+        .then(response => response.json())
+        .then((result: any) => {
+          
+          console.log('Result ===> ', result.available);
+          if (result.available === true) {
+            const requestOptions = {
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: userStore.auth.employee.name,
+                title: props.route.params.title,
+                invitees: invitees,
+                location: props.route.params.location,
+                siteName: userStore.auth.sites[0]?.name,
+                company: userStore.auth.employee.company,
+                phone: userStore.auth.employee.phonesms,
+                email: userStore.auth.employee.email,
+                jobTitle: userStore.auth.employee.jobTitle,
+                isRoom: props.route.params.isRoom,
+                isDesk: props.route.params.isDesk,
+                isOffice: props.route.params.isOffice,
+                bookingType: props.route.params.bookingType,
+                siteId: userStore.auth.siteId,
+                accountId: userStore.auth.employee.accountId,
+                employeeId: userStore.auth.employee.id,
+                roomId: props.route.params.roomId,
+                roomName: props.route.params.roomName,
+                bookedTimeIn: newStartDate,
+                bookedTimeOut: newEndDate,
+                timeZone: RNLocalize.getTimeZone(),
+                meetingId: props.route.params.meetingId,
+              }),
+            };
+
+            fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
+              .then(response => response.json())
+              .then((result: any) => {
+                props.navigation.navigate('Booked', {
+                  roomName: props.route.params.roomName,
+                  roomId: props.route.params.roomId,
+                  date: props.route.params.date,
+                  startDate: startDate.toString(),
+                  endDate: endDate.toString(),
+                  evCode: result?.reservation?.code,
+                });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          } else {
+            props.navigation.navigate('QrBookingNotAvailable', {
+              ...props.route.params,
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    }
+    if (!props.route.params.isQrScanned) {
+      console.log('Yesss');
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: userStore.auth.employee.name,
+          title: props.route.params.title,
+          invitees: invitees,
+          location: props.route.params.location,
+          siteName: userStore.auth.sites[0]?.name,
+          company: userStore.auth.employee.company,
+          phone: userStore.auth.employee.phonesms,
+          email: userStore.auth.employee.email,
+          jobTitle: userStore.auth.employee.jobTitle,
+          isRoom: props.route.params.isRoom,
+          isDesk: props.route.params.isDesk,
+          isOffice: props.route.params.isOffice,
+          bookingType: props.route.params.bookingType,
+          siteId: userStore.auth.siteId,
+          accountId: userStore.auth.employee.accountId,
+          employeeId: userStore.auth.employee.id,
+          roomId: props.route.params.roomId,
+          roomName: props.route.params.roomName,
+          bookedTimeIn: newStartDate,
+          bookedTimeOut: newEndDate,
+          timeZone: RNLocalize.getTimeZone(),
+          meetingId: props.route.params.meetingId,
+        }),
+      };
+
+      fetch(`${BACKEND_URL}/api/rooms_reservations/add`, requestOptions)
+        .then(response => response.json())
+        .then((result: any) => {
+          props.navigation.navigate('Booked', {
+            roomName: props.route.params.roomName,
+            roomId: props.route.params.roomId,
+            date: props.route.params.date,
+            startDate: startDate.toString(),
+            endDate: endDate.toString(),
+            evCode: result?.reservation?.code,
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   };
   return (
     <SafeAreaView style={styles.page}>
@@ -81,18 +169,20 @@ function BookNow(props: any) {
         <Text style={styles.text}>To: {endDate.toString()}</Text>
       </View>
       <View style={styles.button}>
-        <Button
-          color={'#4299E1'}
-          labelStyle={styles.buttonText}
-          style={{width: '40%', borderRadius: 20}}
-          mode="contained"
-          onPress={() =>
-            props.navigation.navigate('SelectViews', {
-              ...props.route.params,
-            })
-          }>
-          Modify
-        </Button>
+        {props.route.params.isQrScanned !== true ? (
+          <Button
+            color={'#4299E1'}
+            labelStyle={styles.buttonText}
+            style={{width: '40%', borderRadius: 20}}
+            mode="contained"
+            onPress={() =>
+              props.navigation.navigate('SelectViews', {
+                ...props.route.params,
+              })
+            }>
+            Modify
+          </Button>
+        ) : null}
         <Button
           disabled={invitees === null ? true : false}
           color={'#4299E1'}

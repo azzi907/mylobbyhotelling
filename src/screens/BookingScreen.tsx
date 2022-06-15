@@ -29,6 +29,8 @@ function BookingScreen(props: any) {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
+  const LOGOUT_IMG = require('../../images/logout-image.png');
+  const QR_CODE = require('../../images/qr-code-image.png');
   const months = [
     'January',
     'February',
@@ -110,8 +112,6 @@ function BookingScreen(props: any) {
       const result = await AddCalendarEvent.presentEventCreatingDialog(
         eventConfig,
       );
-      console.log(result);
-
       if (result.action === 'SAVED') {
         const {calendarItemIdentifier, eventIdentifier} = result;
         RNCalendarEvents.checkPermissions();
@@ -121,7 +121,7 @@ function BookingScreen(props: any) {
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
-          startDate: reservation?.startDate,
+           startDate: reservation?.startDate,
           endDate: reservation?.endDate,
           title: reservation?.title,
           location: reservation?.location,
@@ -131,6 +131,7 @@ function BookingScreen(props: any) {
           isRoom: isRoom,
           isOffice: isOffice,
           isDesk: isDesk,
+          meetingId: calendarItemIdentifier,
         });
       } else {
         props.navigation.navigate('Init');
@@ -225,19 +226,28 @@ function BookingScreen(props: any) {
         }>
         Book Meeting Room
       </Button>
-      <Button
-        color={'#4299E1'}
-        labelStyle={{...styles.buttonText, color: '#4299E1'}}
-        style={{
-          borderRadius: 20,
-          marginTop: hp(3.5),
-          borderWidth: 1,
-          borderColor: '#4299E1',
-        }}
-        mode="outlined"
-        onPress={logout}>
-        Log Out
-      </Button>
+      <View style={styles.logout}>
+        <TouchableOpacity
+          onPress={() => {
+            props.navigation.navigate('QrScreen');
+          }}>
+          <Image style={styles.logoutImg} source={QR_CODE} />
+          <Text
+            style={styles.text}>
+            SCAN QR
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            logout();
+          }}>
+          <Image style={styles.logoutImg} source={LOGOUT_IMG} />
+          <Text
+            style={styles.text}>
+            LOG OUT
+          </Text>
+        </TouchableOpacity>
+      </View>
       {/* <Text style={{marginTop: 'auto', marginBottom: 10}}>
         Powered by MyLobby.co
       </Text> */}
@@ -297,6 +307,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
   },
+  logout: {
+    marginTop: 'auto',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: hp(2),
+    textAlign: 'center',
+  },
+  logoutImg: {
+    width: hp(7),
+    height: hp(7),
+  },
+  text:{
+    textAlign: 'center',
+    fontSize: wp(2.5),
+    fontWeight: '700',
+    color: '#1C8ADB',
+    marginTop: 10,
+  }
 });
 
 export default observer(BookingScreen);

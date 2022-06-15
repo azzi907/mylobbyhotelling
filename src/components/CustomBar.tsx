@@ -5,6 +5,7 @@ import React from 'react';
 import USER from '../../images/user.png';
 import BOOK_DESK from '../../images/Union.png';
 import MY_MEET from '../../images/icon.png';
+
 import {useRootStoreContext} from '../Store';
 import {
   heightPercentageToDP as hp,
@@ -29,7 +30,6 @@ function CustomTabBar(props: any) {
   const navigateToMyMeetings = () => {
     props.navigation.navigate('MyMeetings');
   };
-
   return (
     <View
       style={{
@@ -64,7 +64,6 @@ function CustomTabBar(props: any) {
         onPress={() => {
           navigateToFindColleague();
           setSelectedColl(true);
-
           setSelectedMeet(false);
           setSelectedDesk(false);
         }}>
@@ -119,6 +118,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'relative',
     backgroundColor: 'black',
+    alignItems: 'center',
   },
   textStyle: {
     color: '#fff',
@@ -127,13 +127,18 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   img: {
-    padding: hp(1),
-    marginLeft: hp(4.1),
+    padding: hp(0.9),
+    marginLeft: hp(3),
   },
   container: {
     flexDirection: 'column',
     padding: hp(1),
     marginTop: hp(0.5),
+  },
+  imgQR: {
+    height: 15,
+    width: 15,
+    marginLeft: wp(4),
   },
 });
 export default observer(CustomTabBar);

@@ -4,27 +4,30 @@ import React from 'react';
 import {View, Text, StyleSheet, SafeAreaView, Image} from 'react-native';
 import {useRootStoreContext} from '../Store';
 
-function Booked(props: any) {
+function UpdatedMeeting(props: any) {
   const {userStore} = useRootStoreContext();
 
   const BOOKED = require('../../images/check-mark.png');
   const callBack = () => {
-    props.navigation.navigate('Booking');
+    props.navigation.navigate('MyMeetings');
   };
   setTimeout(callBack, 3000);
-  console.log('props.route.params.evCode ==> ', props.route.params.evCode);
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <Text style={styles.text}>{userStore.auth.employee.name}</Text>
         <Text style={styles.text}>
-          You have selected {props.route.params.roomName}
+          You Meeting has been Updated to:{'\n'}
+          {props.route.params.reservations.title}
         </Text>
-        <Text style={styles.text}>Start: {props.route.params.startDate}</Text>
-        <Text style={styles.text}>To: {props.route.params.endDate}</Text>
         <Text style={styles.text}>
-          Confirmation Code: {props.route.params.evCode}
+          {`Start: ${new Date(props.route.params.reservations.bookedTimeIn)}`}
+        </Text>
+        <Text style={styles.text}>{`To: ${new Date(
+          props.route.params.reservations.bookedTimeOut,
+        )}`}</Text>
+        <Text style={styles.text}>
+          Confirmation Code: {'\n'} {props.route.params.reservations.code}
         </Text>
       </View>
       <Image style={styles.bookedIcon} source={BOOKED} />
@@ -55,4 +58,4 @@ const styles = StyleSheet.create({
   },
   bookedIcon: {width: 110, height: 110},
 });
-export default observer(Booked);
+export default observer(UpdatedMeeting);

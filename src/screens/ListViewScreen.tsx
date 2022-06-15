@@ -73,7 +73,6 @@ function ListView(props: any) {
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -119,9 +118,8 @@ function ListView(props: any) {
           onChangeText={onChangeSearch}
           style={{marginTop: 10, borderRadius: 10}}
         />
-        <Text style={{marginTop: 10}}>Today: {userStore.auth.date}</Text>
         <ScrollView
-          style={{height: '75%'}}
+          style={{height: '80%'}}
           showsVerticalScrollIndicator={false}>
           {filteredRooms?.map((roomData: any) => {
             return (

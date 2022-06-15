@@ -30,6 +30,9 @@ function FindAColleague(this: any, props: any) {
   const {store, userStore} = useRootStoreContext();
   const CALENDAR = require('../../images/calendar-icon.png');
   const BACK_ICON = require('../../images/back-icon.png');
+  const USER_ICON = require('../../images/userIcon.png');
+  const CIRC_RED = require('../../images/circle-red.png');
+
   const BACKEND_URL = store.parameters.backendUrl;
   const [area, setArea] = React.useState<any>({});
   const [floorPlan, setFloorPlan] = React.useState<any>(null);
@@ -62,28 +65,9 @@ function FindAColleague(this: any, props: any) {
       .then(result => {
         const newfloorPlan = result.floorPlan;
         newfloorPlan.areaRN.forEach((ar: any) => {
-          // const isAvailable = rooms.find(
-          //   (room: any) =>
-          //     room.location === floorPlan.name &&
-          //     room.name === ar.name &&
-          //     room.isBlocked === false,
-          // );
-          // const blocked = rooms.find(
-          //   (room: any) =>
-          //     room.name === rooms.name &&
-          //     room.name === ar.name &&
-          //     room.isBlocked === true,
-          // );
-          // if (isAvailable) {
-          //   ar.fill = 'green';
-          //   ar.prefill = 'green';
-          // } else if (blocked) {
-          //   ar.fill = 'yellow';
-          //   ar.prefill = 'yellow';
-          // } else
           if (rooms.name === ar.name) {
-            ar.fill = '#324fb6';
-            ar.prefill = '#324fb6';
+            ar.fill = '#324fb650';
+            ar.prefill = '#324fb650';
           } else {
             ar.fill = '#FF0000';
             ar.prefill = '#FF0000';
@@ -91,50 +75,12 @@ function FindAColleague(this: any, props: any) {
         });
         setArea(newfloorPlan.areaRN);
         setFloorPlan(newfloorPlan);
-        // const l: any = [];
-        // floorPlan.map((fp: any) => {
-        //   l.push({label: fp.name, value: fp.name});
-        // });
-        // setFloorPlanList(l);
       })
       .catch((error: any) => {
         console.log('floor plan exception =>', error);
         ToastAndroid.show('Error Getting Floor Plan', ToastAndroid.LONG);
       });
   };
-  // React.useEffect(() => {
-  //   if (selectedFloorPlan) {
-  //     const fp: any = floorPlanAll.filter(
-  //       (fpc: any) => fpc.name === selectedFloorPlan,
-  //     );
-  //     fp[0].areaRN?.forEach((ar: any) => {
-  //       const isAvailable = rooms.find(
-  //         (room: any) =>
-  //           room.location === fp[0].name &&
-  //           room.name === ar.name &&
-  //           room.isBlocked === false,
-  //       );
-  //       const blocked = rooms.find(
-  //         (room: any) =>
-  //           room.location === fp[0].name &&
-  //           room.name === ar.name &&
-  //           room.isBlocked === true,
-  //       );
-  //       if (isAvailable) {
-  //         ar.fill = 'green';
-  //         ar.prefill = 'green';
-  //       } else if (blocked) {
-  //         ar.fill = 'yellow';
-  //         ar.prefill = 'yellow';
-  //       } else {
-  //         ar.fill = 'red';
-  //         ar.prefill = 'red';
-  //       }
-  //     });
-  //     setArea(fp[0].areaRN);
-  //     setFloorPlan(fp[0]);
-  //   }
-  // }, [selectedFloorPlan]);
   const getRooms = async (id: any) => {
     const requestOptions = {
       method: 'GET',
@@ -272,7 +218,7 @@ function FindAColleague(this: any, props: any) {
       } else {
         Alert.alert('Blocked');
       }
-    } else if (item.fill === '#324fb6') {
+    } else if (item.fill === '#324fb650') {
       setpopUp(true);
     }
   }
@@ -393,31 +339,52 @@ function FindAColleague(this: any, props: any) {
             <Text style={styles.popUpText}>{rooms.location}</Text>
           </View>
         ) : null}
-        {floorPlan?.file ? (
-          <ScrollView horizontal={true}>
-            <ScrollView
-              nestedScrollEnabled
-              showsVerticalScrollIndicator={false}>
-              <ImageMapper
-                imgHeight={floorPlan.imageDim[1]}
-                imgWidth={floorPlan.imageDim[0]}
-                imgSource={`${BACKEND_URL}/resources/floorplans/${userStore.auth.employee.sites[0]}/${floorPlan.file}`}
-                imgMap={area}
-                onPress={(item: any) => {
-                  mainImgWasPressed(item);
-                }}
-                containerStyle={{top: 10}}
-                selectedAreaId={'0'}
-              />
+        <View style={styles.floorPlanViewContainer}>
+          {floorPlan?.file ? (
+            <ScrollView horizontal={true}>
+              <ScrollView
+                nestedScrollEnabled
+                showsVerticalScrollIndicator={false}>
+                <ImageMapper
+                  imgHeight={floorPlan.imageDim[1]}
+                  imgWidth={floorPlan.imageDim[0]}
+                  imgSource={`${BACKEND_URL}/resources/floorplans/${userStore.auth.employee.sites[0]}/${floorPlan.file}`}
+                  imgMap={area}
+                  onPress={(item: any) => {
+                    mainImgWasPressed(item);
+                  }}
+                  containerStyle={{top: 10}}
+                  selectedAreaId={'0'}
+                />
+              </ScrollView>
             </ScrollView>
-          </ScrollView>
-        ) : (
-          <View style={styles.noData}>
-            <Text style={styles.noDataText}>
-              No Data Available Please Select Filters
-            </Text>
+          ) : (
+            <View style={styles.noData}>
+              <Text style={styles.noDataText}>
+                No Data Available Please Select Filters
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
+      <View style={styles.box}>
+        <Text style={{alignSelf: 'center', fontWeight: '600'}}>Legend</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 5,
+          }}>
+          <View style={styles.legendDescription}>
+            <Text style={styles.text}>Your Colleague</Text>
+            <Image source={USER_ICON} style={styles.userContainer} />
           </View>
-        )}
+          <View style={styles.legendDescription}>
+            <Text style={styles.text}>Other Users</Text>
+            <Image style={styles.userContainerCirc} source={CIRC_RED} />
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -437,9 +404,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
   },
-  shadowProp: {
-    // shadowColor: '#171717',
-  },
+  shadowProp: {},
   floorPlan: {
     height: 400,
     width: '80%',
@@ -453,11 +418,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   box: {
-    width: '70%',
-    height: 70,
-    marginTop: 30,
+    width: wp(80),
+    height: hp(8),
+    marginTop: 10,
     bottom: 0,
-    // position:'absolute',
     borderWidth: 1,
   },
   legendDescription: {
@@ -518,8 +482,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     marginTop: hp(45),
-    height: 142,
-    width: 192,
+    height: hp(17),
+    width: wp(45),
     backgroundColor: '#E6E6E6',
     opacity: 0.9,
     zIndex: 11111,
@@ -541,6 +505,25 @@ const styles = StyleSheet.create({
   },
   noDataText: {
     fontSize: hp(2),
+  },
+  floorPlanViewContainer: {
+    height: hp(49),
+    width: wp(95),
+  },
+  text: {
+    fontSize: wp(2.7),
+    fontWeight: '600',
+    lineHeight: wp(7),
+  },
+  userContainer: {
+    width: wp(8),
+    height: hp(4),
+  },
+  userContainerCirc: {
+    width: wp(5.7),
+    height: hp(2.9),
+    marginLeft: 5,
+    marginTop: 5,
   },
 });
 export default observer(FindAColleague);
