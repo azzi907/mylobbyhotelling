@@ -244,13 +244,13 @@ function FindAColleague(this: any, props: any) {
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <View style={{display: 'flex', flexDirection: 'row', marginTop: 15}}>
-          <TouchableOpacity
+        <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
-              props.navigation.navigate('SelectViews', {...props.route.params});
+              props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4}}>Back</Text>
+            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
+            <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
           </TouchableOpacity>
           <Text
             style={{
@@ -272,6 +272,7 @@ function FindAColleague(this: any, props: any) {
               color: 'red',
               marginLeft: 'auto',
               textDecorationLine: 'underline',
+              fontSize:hp(1.5),
             }}>
             Clear Filters
           </Text>
@@ -282,7 +283,7 @@ function FindAColleague(this: any, props: any) {
             placeholder="Employee Name"
             value={searchQuery}
             onChangeText={onChangeSearch}
-            style={{marginTop: 10, borderRadius: 10}}
+            style={{marginTop: 10, borderRadius: 10 , height:hp(6)}}
           />
         </View>
         <View style={{marginTop: 5, flexDirection: 'row'}}>
@@ -368,7 +369,7 @@ function FindAColleague(this: any, props: any) {
         </View>
       </View>
       <View style={styles.box}>
-        <Text style={{alignSelf: 'center', fontWeight: '600'}}>Legend</Text>
+        <Text style={{alignSelf: 'center', fontWeight: '700', marginTop: hp(0.5) , fontSize:hp(2.2)}}>Legend</Text>
         <View
           style={{
             display: 'flex',
@@ -418,15 +419,25 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   box: {
-    width: wp(80),
-    height: hp(8),
+    width: wp(85),
+    height: hp(9),
     marginTop: 10,
     bottom: 0,
-    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
+    backgroundColor:'white',
   },
   legendDescription: {
+    width: wp(40),
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
   circle: {
     marginTop: 4,
@@ -440,7 +451,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderWidth: 3,
     borderColor: '#dddddd',
-    borderRadius: 8,
+    borderRadius: wp(3),
     textAlign: 'center',
   },
   dateText: {
@@ -456,11 +467,11 @@ const styles = StyleSheet.create({
   img: {
     marginLeft: 'auto',
     marginRight: 10,
-    padding: 10,
-    marginTop: 10,
+    padding: hp(1.5),
+    marginTop: wp(3.5),
   },
   inputStyle: {
-    fontSize: wp(5),
+    fontSize: hp(2.5),
   },
   button: {
     height: wp(12),
@@ -468,7 +479,7 @@ const styles = StyleSheet.create({
     width: wp(32),
     marginLeft: wp(2.5),
     marginTop: 10,
-    borderRadius: 10,
+    borderRadius: wp(2),
   },
   btntext: {
     fontSize: wp(3.8),
@@ -513,17 +524,16 @@ const styles = StyleSheet.create({
   text: {
     fontSize: wp(2.7),
     fontWeight: '600',
-    lineHeight: wp(7),
+    lineHeight: hp(4),
   },
   userContainer: {
     width: wp(8),
-    height: hp(4),
+    height: hp(5),
   },
   userContainerCirc: {
-    width: wp(5.7),
-    height: hp(2.9),
-    marginLeft: 5,
-    marginTop: 5,
+    width: hp(2.8),
+    height: hp(2.8),
+    marginTop: wp(0.5)
   },
 });
 export default observer(FindAColleague);

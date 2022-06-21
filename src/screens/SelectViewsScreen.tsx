@@ -8,35 +8,37 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
+import { widthPercentageToDP , heightPercentageToDP} from 'react-native-responsive-screen';
 
 export default function SelectViews(props: any) {
   const MENU_BAR = require('../../images/list-view.png');
   const LOC_IMG = require('../../images/floor-plan-view.png');
-  console.log("Props ====> " , props.route.params);
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <Text style={styles.text}>
           How do you want to select your desk or meeting room?
         </Text>
-        <TouchableOpacity
-          onPress={() => {
-            props.navigation.navigate('ListView', {
-              ...props.route.params,
-            });
-          }}>
-          <View style={styles.box}>
-            <Image style={styles.menuimg} source={MENU_BAR} />
-            <Text
-              style={{
-                marginLeft: 10,
-                textAlignVertical: 'center',
-                fontSize: 20,
-              }}>
-              List View
-            </Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.boxShadow}>
+          <TouchableOpacity
+            onPress={() => {
+              props.navigation.navigate('ListView', {
+                ...props.route.params,
+              });
+            }}>
+            <View style={styles.box}>
+              <Image style={styles.menuimg} resizeMode="contain" source={MENU_BAR} />
+              <Text
+                style={{
+                  marginLeft: widthPercentageToDP(3),
+                  textAlignVertical: 'center',
+                  fontSize: heightPercentageToDP(3),
+                }}>
+                List View
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('FloorPlanView', {
@@ -44,12 +46,12 @@ export default function SelectViews(props: any) {
             });
           }}>
           <View style={styles.box}>
-            <Image style={styles.menuimg} source={LOC_IMG} />
+            <Image style={styles.menuimg} resizeMode = "contain" source={LOC_IMG} />
             <Text
               style={{
-                marginLeft: 10,
+                marginLeft: widthPercentageToDP(3),
                 textAlignVertical: 'center',
-                fontSize: 20,
+                fontSize: heightPercentageToDP(3),
               }}>
               Floor Plan View
             </Text>
@@ -75,23 +77,48 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 80,
     paddingHorizontal: 80,
+    fontSize: widthPercentageToDP(4),
+    fontWeight: '500',
   },
   box: {
-    width: 270,
-    height: 85,
+    width: widthPercentageToDP(75),
+    height: heightPercentageToDP(13),
     display: 'flex',
     flexDirection: 'row',
-    borderWidth: 0.5,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 3.46,
+
+    elevation: 1,
+    backgroundColor: 'white',
   },
   menuimg: {
-    marginLeft: 10,
+    marginLeft: widthPercentageToDP(2),
+    width: widthPercentageToDP(13.5),
+    height: heightPercentageToDP(13.5),
+
   },
   container: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  boxShadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
   },
 });

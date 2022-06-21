@@ -42,21 +42,21 @@
 	<key>NSAppleMusicUsageDescription</key>
 	<string>App wants to access Music library</string>
 	<key>NSCalendarsUsageDescription</key>
-	<string>This app requires access to the calendar</string>
+	<string>$(PRODUCT_NAME) needs to access Calendar to manage events and schedules.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>This app require your camera permissions to SCAN QR </string>
+	<string>$(PRODUCT_NAME) require your camera permissions to SCAN QR </string>
 	<key>NSContactsUsageDescription</key>
-	<string>This app requires access to Contacts</string>
+	<string>$(PRODUCT_NAME) requires access to Contacts manage events</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app requires access to Location</string>
+	<string>$(PRODUCT_NAME) requires access to Location manage events</string>
 	<key>NSLocationUsageDescription</key>
-	<string>This app requires access to Location</string>
+	<string>$(PRODUCT_NAME) requires access to Location manage events</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app requires access to Location</string>
+	<string>$(PRODUCT_NAME) requires access to Location manage events</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App needs your Persmission to Access your Photo Library</string>
+	<string>$(PRODUCT_NAME) needs your Persmission to Access your Photo Library to get QR code</string>
 	<key>NSSiriUsageDescription</key>
-	<string>App wants to access Siri</string>
+	<string>$(PRODUCT_NAME) wants to access Siri</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

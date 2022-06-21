@@ -38,7 +38,6 @@ function QrReservation(props: any) {
         calendarItemIdentifier,
       );
       const invitees = reservation?.attendees?.slice(1);
-      console.log('reservation====>');
 
       props.navigation.navigate('BookNow', {
         startDate: reservation?.startDate,
@@ -103,7 +102,7 @@ function QrReservation(props: any) {
         onPress={() => {
           bookNow();
         }}>
-        {`Book This ${
+        {`Reserve This ${
           props.route.params.bookingType === 'Booked Meeting Desk'
             ? 'Desk'
             : 'Booked Meeting Room'

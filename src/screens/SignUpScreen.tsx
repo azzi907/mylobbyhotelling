@@ -49,7 +49,6 @@ const SignUpScreen = (props: any) => {
 
   const handleSignUp = async () => {
     if (validateEmail(email)) {
-      console.log('Truee');
       setisLoading(true);
       var myHeaders = new Headers();
       myHeaders.append('Content-Type', 'application/json');

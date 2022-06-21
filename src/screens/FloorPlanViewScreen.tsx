@@ -63,6 +63,8 @@ function FloorPlanView(this: any, props: any) {
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        console.log('rooms ===>', result.rooms);
+
         setRooms(result.rooms);
       })
       .catch(error => {
@@ -72,34 +74,67 @@ function FloorPlanView(this: any, props: any) {
   };
 
   React.useEffect(() => {
-    console.log('Selected Floor Plan ===>', selectedFloorPlan);
-
     if (selectedFloorPlan) {
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
       fp[0].areaRN?.forEach((ar: any) => {
-        const isAvailable = rooms.find(
-          (room: any) =>
-            room.location === fp[0].name &&
-            room.name === ar.name &&
-            room.isBlocked === false,
-        );
-        const blocked = rooms.find(
-          (room: any) =>
-            room.location === fp[0].name &&
-            room.name === ar.name &&
-            room.isBlocked === true,
-        );
-        if (isAvailable) {
-          ar.fill = 'green';
-          ar.prefill = 'green';
-        } else if (blocked) {
-          ar.fill = 'white';
-          ar.prefill = 'white';
+        if (userStore.auth.employee.category !== 'C') {
+          const isAvailable = rooms.find(
+            (room: any) =>
+              room.location === fp[0].name &&
+              room.name === ar.name &&
+              room.isBlocked === false &&
+              room.category === userStore.auth.employee.category,
+          );
+          const blocked = rooms.find(
+            (room: any) =>
+              room.location === fp[0].name &&
+              room.name === ar.name &&
+              room.isBlocked === true,
+          );
+          const category = rooms.find(
+            (room: any) =>
+              room.location === fp[0].name &&
+              room.name === ar.name &&
+              room.category !== userStore.auth.employee.category,
+          );
+          if (isAvailable) {
+            ar.fill = 'green';
+            ar.prefill = 'green';
+          } else if (blocked) {
+            ar.fill = 'white';
+            ar.prefill = 'white';
+          } else if (category) {
+            ar.fill = 'yellow';
+            ar.prefill = 'yellow';
+          } else {
+            ar.fill = 'red';
+            ar.prefill = 'red';
+          }
         } else {
-          ar.fill = 'red';
-          ar.prefill = 'red';
+          const isAvailable = rooms.find(
+            (room: any) =>
+              room.location === fp[0].name &&
+              room.name === ar.name &&
+              room.isBlocked === false,
+          );
+          const blocked = rooms.find(
+            (room: any) =>
+              room.location === fp[0].name &&
+              room.name === ar.name &&
+              room.isBlocked === true,
+          );
+          if (isAvailable) {
+            ar.fill = 'green';
+            ar.prefill = 'green';
+          } else if (blocked) {
+            ar.fill = 'white';
+            ar.prefill = 'white';
+          } else {
+            ar.fill = 'red';
+            ar.prefill = 'red';
+          }
         }
       });
       setArea(fp[0].areaRN);
@@ -120,27 +155,62 @@ function FloorPlanView(this: any, props: any) {
         const floorPlan = result.floorPlans;
         setFloorPlanAll(floorPlan);
         floorPlan[0].areaRN.forEach((ar: any) => {
-          const isAvailable = rooms.find(
-            (room: any) =>
-              room.location === floorPlan[0].name &&
-              room.name === ar.name &&
-              room.isBlocked === false,
-          );
-          const blocked = rooms.find(
-            (room: any) =>
-              room.location === floorPlan[0].name &&
-              room.name === ar.name &&
-              room.isBlocked === true,
-          );
-          if (isAvailable) {
-            ar.fill = 'green';
-            ar.prefill = 'green';
-          } else if (blocked) {
-            ar.fill = 'white';
-            ar.prefill = 'white';
+          if (userStore.auth.employee.category !== 'C') {
+            const isAvailable = rooms.find(
+              (room: any) =>
+                room.location === floorPlan[0].name &&
+                room.name === ar.name &&
+                room.isBlocked === false &&
+                room.category === userStore.auth.employee.category,
+            );
+            const blocked = rooms.find(
+              (room: any) =>
+                room.location === floorPlan[0].name &&
+                room.name === ar.name &&
+                room.isBlocked === true,
+            );
+            const category = rooms.find(
+              (room: any) =>
+                room.location === floorPlan[0].name &&
+                room.name === ar.name &&
+                room.category !== userStore.auth.employee.category,
+            );
+            if (isAvailable) {
+              ar.fill = 'green';
+              ar.prefill = 'green';
+            } else if (blocked) {
+              ar.fill = 'white';
+              ar.prefill = 'white';
+            } else if (category) {
+              ar.fill = 'yellow';
+              ar.prefill = 'yellow';
+            } else {
+              ar.fill = 'red';
+              ar.prefill = 'red';
+            }
           } else {
-            ar.fill = 'red';
-            ar.prefill = 'red';
+            const isAvailable = rooms.find(
+              (room: any) =>
+                room.location === floorPlan[0].name &&
+                room.name === ar.name &&
+                room.isBlocked === false,
+            );
+            const blocked = rooms.find(
+              (room: any) =>
+                room.location === floorPlan[0].name &&
+                room.name === ar.name &&
+                room.isBlocked === true,
+            );
+            if (isAvailable) {
+              ar.fill = 'green';
+              ar.prefill = 'green';
+            } else if (blocked) {
+              ar.fill = 'white';
+              ar.prefill = 'white';
+            } else {
+              ar.fill = 'red';
+              ar.prefill = 'red';
+            }
           }
         });
         setArea(floorPlan[0].areaRN);
@@ -168,11 +238,22 @@ function FloorPlanView(this: any, props: any) {
       });
     } else if (item.fill === 'white') {
       if (Platform.OS === 'android') {
-        ToastAndroid.show('Not Available Due to Social Distancing', ToastAndroid.LONG);
+        ToastAndroid.show(
+          'Not Available Due to Social Distancing',
+          ToastAndroid.LONG,
+        );
       } else {
         Alert.alert('Not Available Due to Social Distancing');
       }
-    } else {
+    }
+    // else if(item.category === 'C' && item.fill === 'red') {
+    //   if (Platform.OS === 'android') {
+    //     ToastAndroid.show('Executive room', ToastAndroid.LONG);
+    //   } else {
+    //     Alert.alert('Executive room');
+    //   }
+    // }
+    else {
       if (Platform.OS === 'android') {
         ToastAndroid.show('Already Booked', ToastAndroid.LONG);
       } else {
@@ -186,20 +267,19 @@ function FloorPlanView(this: any, props: any) {
       getFloorPlan();
     }
   }, [rooms]);
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <View style={{display: 'flex', flexDirection: 'row', marginTop: 15}}>
-          <TouchableOpacity
+        <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
-              props.navigation.navigate('SelectViews', {...props.route.params});
+              props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4}}>Back</Text>
+            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
+            <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
           </TouchableOpacity>
-          <Text style={{marginLeft: wp(25), fontWeight: '600'}}>
+          <Text style={{marginLeft: wp(5), fontWeight: '500', fontSize:hp(1.5)}}>
             Search results
           </Text>
         </View>
@@ -220,7 +300,7 @@ function FloorPlanView(this: any, props: any) {
                 ...props.route.params,
               });
             }}>
-            <Text style={{fontSize: 15, fontWeight: '500'}}>List View</Text>
+            <Text style={{fontSize: hp(2), fontWeight: '500'}}>List View</Text>
           </TouchableOpacity>
         </View>
         <View style={{marginTop: 10, zIndex: 1}}>
@@ -232,6 +312,10 @@ function FloorPlanView(this: any, props: any) {
             setValue={() => {}}
             onSelectItem={t => setSelectedFloorPlan(t.value)}
             placeholder="Select Floor Plan"
+            style={{height:hp(6) , borderRadius:wp(2)}}
+            textStyle={{
+              fontSize: hp(2)
+            }}
           />
         </View>
         <View style={styles.floorPlanContainer}>
@@ -255,7 +339,10 @@ function FloorPlanView(this: any, props: any) {
         </View>
       </View>
       <View style={styles.box}>
-        <Text style={{alignSelf: 'center', fontWeight: '600' , marginTop: hp(0.5)}}>Legend</Text>
+        <Text
+          style={{alignSelf: 'center', fontWeight: '600', marginTop: hp(0.5) , fontSize: hp(2)}}>
+          Legend
+        </Text>
         <View
           style={{
             display: 'flex',
@@ -263,15 +350,15 @@ function FloorPlanView(this: any, props: any) {
             justifyContent: 'space-around',
           }}>
           <View style={styles.legendDescription}>
-            <Image style={{marginTop: 3}} source={CIRC_GREEN} />
+            <Image resizeMode='contain' style={{marginTop: hp(0.4), width: wp(3.5), height:hp(2)}} source={CIRC_GREEN} />
             <Text style={styles.text}>Desk is avaiable</Text>
           </View>
           <View style={styles.legendDescription}>
-            <Image style={{marginTop: 3}} source={CIRC_RED} />
+            <Image resizeMode='contain' style={{marginTop: hp(0.4), width: wp(3.5), height:hp(2)}} source={CIRC_RED} />
             <Text style={styles.text}>Desk is taken</Text>
           </View>
           <View style={styles.legendDescription}>
-            <Image style={{marginTop: 3}} source={SOCIAL_DIST} />
+            <Image resizeMode='contain' style={{marginTop: hp(0.4), width: wp(3.5), height:hp(2)}} source={SOCIAL_DIST} />
             <Text style={styles.text}>Desk is blocked</Text>
           </View>
         </View>
@@ -283,11 +370,11 @@ function FloorPlanView(this: any, props: any) {
             marginTop: 5,
           }}>
           <View style={styles.legendDescription}>
-            <Image style={{marginTop: 3}} source={RECT_GREEN} />
+            <Image resizeMode='contain' style={{marginTop: hp(0.5), width:wp(3.5), height:hp(2)}} source={RECT_GREEN} />
             <Text style={styles.text}>Desk is avaiable</Text>
           </View>
           <View style={styles.legendDescription}>
-            <Image style={{marginTop: 3}} source={RECT_RED} />
+            <Image resizeMode='contain' style={{marginTop: hp(0.5), width:wp(3.5), height:hp(2)}} source={RECT_RED} />
             <Text style={styles.text}>Desk is taken</Text>
           </View>
         </View>
@@ -300,7 +387,7 @@ const styles = StyleSheet.create({
   page: {
     width: '100%',
     height: '100%',
-    backgroundColor: 'white',
+    backgroundColor: '#ededed',
     alignItems: 'center',
   },
   container: {
@@ -309,9 +396,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-  },
-  shadowProp: {
-    // shadowColor: '#171717',
   },
   floorPlan: {
     height: 400,
@@ -322,40 +406,49 @@ const styles = StyleSheet.create({
   floorPlanView: {
     textDecorationLine: 'underline',
     color: '#51D1FA',
-    fontSize: 15,
+    fontSize: hp(2),
     fontWeight: '500',
   },
   box: {
-    width: wp(85),
-    height: hp(10.7),
-    marginTop: hp(2),
-    bottom: hp(0),
-    // position:'absolute',
-    borderWidth: 1,
+    position:'absolute',
+    width: wp(90),
+    height: hp(11),
+    marginTop: hp(1.5),
+    bottom: hp(2.2),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
+    backgroundColor:'white',
   },
   text: {
-    fontSize: wp(2.7),
-    fontWeight: '600',
-    lineHeight: 15,
+    fontSize: hp(1.5),
+    fontWeight: '400',
+    lineHeight: wp(3.8),
     marginLeft: 5,
   },
   legendDescription: {
     display: 'flex',
     flexDirection: 'row',
-    marginTop: wp(2),
-  },
-  circle: {
-    marginTop: 4,
-    backgroundColor: 'yellow',
-    width: 11,
-    height: 11,
-    borderRadius: 50,
+    marginTop: wp(1),
   },
   floorPlanContainer: {
-    height: hp(56),
+    height: hp(62),
     width: wp(95),
-    borderWidth: 0.5,
-    marginTop: 10,
+    marginTop: hp(2.5),
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
+    backgroundColor:'white',
   },
 });
 export default observer(FloorPlanView);

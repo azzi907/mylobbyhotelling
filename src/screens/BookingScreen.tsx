@@ -121,7 +121,7 @@ function BookingScreen(props: any) {
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
-           startDate: reservation?.startDate,
+          startDate: reservation?.startDate,
           endDate: reservation?.endDate,
           title: reservation?.title,
           location: reservation?.location,
@@ -180,7 +180,7 @@ function BookingScreen(props: any) {
       <Text
         style={{
           ...styles.welcome,
-          fontSize: 20,
+          fontSize: hp(4),
           paddingHorizontal: 10,
           textAlign: 'center',
         }}>
@@ -196,56 +196,56 @@ function BookingScreen(props: any) {
         }}
         style={styles.companyLogo}
       />
+      <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
         labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 10}}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height:hp(5.4)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Meeting Desk', false, false, true)
         }>
         Book Hot Desk
       </Button>
+      </View>
+      <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
         labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 15}}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height:hp(5.4)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Private Office', false, true, false)
         }>
         Book Private Office
       </Button>
-      <Button
-        color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 15}}
-        mode="contained"
-        onPress={() =>
-          calenderEvent('Booked Meeting Room', true, false, false)
-        }>
-        Book Meeting Room
-      </Button>
+      </View>
+      <View style={styles.buttonShadow}>
+        <Button
+          color={'#4299E1'}
+          labelStyle={styles.buttonText}
+          style={{borderRadius: wp(6), marginTop: hp(2), height:hp(5.4)}}
+          mode="contained"
+          onPress={() =>
+            calenderEvent('Booked Meeting Room', true, false, false)
+          }>
+          Book Meeting Room
+        </Button>
+      </View>
       <View style={styles.logout}>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('QrScreen');
           }}>
           <Image style={styles.logoutImg} source={QR_CODE} />
-          <Text
-            style={styles.text}>
-            SCAN QR
-          </Text>
+          <Text style={styles.text}>SCAN QR</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             logout();
           }}>
           <Image style={styles.logoutImg} source={LOGOUT_IMG} />
-          <Text
-            style={styles.text}>
-            LOG OUT
-          </Text>
+          <Text style={styles.text}>LOG OUT</Text>
         </TouchableOpacity>
       </View>
       {/* <Text style={{marginTop: 'auto', marginBottom: 10}}>
@@ -266,8 +266,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
-    marginTop: 50,
-    fontSize: 25,
+    marginTop: hp(5),
+    fontSize: hp(4),
   },
   companyLogo: {
     width: wp(30),
@@ -276,7 +276,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    width: '70%',
+    width: wp(75),
+    fontSize: hp(2.5),
+    lineHeight: wp(5),
   },
   icalButton: {
     width: 100,
@@ -319,13 +321,24 @@ const styles = StyleSheet.create({
     width: hp(7),
     height: hp(7),
   },
-  text:{
+  text: {
     textAlign: 'center',
     fontSize: wp(2.5),
     fontWeight: '700',
     color: '#1C8ADB',
     marginTop: 10,
-  }
+  },
+  buttonShadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
+  },
 });
 
 export default observer(BookingScreen);
