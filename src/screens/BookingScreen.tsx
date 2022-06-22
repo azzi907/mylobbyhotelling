@@ -202,8 +202,8 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
-        style={{borderRadius: wp(6), marginTop: hp(2) , height:wp(10)}}
+        labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Meeting Desk', false, false, true)
@@ -214,8 +214,8 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
-        style={{borderRadius: wp(6), marginTop: hp(2) , height:wp(10)}}
+        labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Private Office', false, true, false)
@@ -226,8 +226,8 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
         <Button
           color={'#4299E1'}
-          labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
-          style={{borderRadius: wp(6), marginTop: hp(2), height:wp(10)}}
+          labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+          style={{borderRadius: wp(6), marginTop: hp(2), height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
           mode="contained"
           onPress={() =>
             calenderEvent('Booked Meeting Room', true, false, false)
@@ -235,10 +235,10 @@ function BookingScreen(props: any) {
           Book Meeting Room
         </Button>
       </View>
-      <View style={styles.buttonShadow}>
+      {/* <View style={styles.buttonShadow}>
         <Button
           color={'#4299E1'}
-          labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
+          labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
           style={{borderRadius: wp(6), marginTop: hp(2), height:wp(10)}}
           mode="contained"
           onPress={() =>
@@ -246,7 +246,7 @@ function BookingScreen(props: any) {
           }>
           Check Availability
         </Button>
-      </View>
+      </View> */}
       <View style={styles.logout}>
         <TouchableOpacity
           onPress={() => {
@@ -263,9 +263,6 @@ function BookingScreen(props: any) {
           <Text style={styles.text}>LOG OUT</Text>
         </TouchableOpacity>
       </View>
-      {/* <Text style={{marginTop: 'auto', marginBottom: 10}}>
-        Powered by MyLobby.co
-      </Text> */}
     </SafeAreaView>
   );
 }
@@ -292,7 +289,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     width: wp(75),
-    fontSize: wp(4),
+    
   },
   icalButton: {
     width: 100,

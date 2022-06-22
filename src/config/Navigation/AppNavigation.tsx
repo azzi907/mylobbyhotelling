@@ -21,6 +21,7 @@ import QrExistingReservation from '../../screens/QrExistingReservation';
 import QrReservationLogIn from '../../screens/QrReservationLogInScreen';
 import QrReservationNotFound from '../../screens/QrReservationNotFoundScreen';
 import QrBookingNotAvailable from '../../screens/QrBookingNotAvailable';
+//import CheckAvailability from '../../screens/CheckAvailabiltyScreen';
 
 type StackParamList = {
   Init: undefined;
@@ -43,6 +44,7 @@ type StackParamList = {
   QrReservationLogIn : undefined;
   QrReservationNotFound : undefined;
   QrBookingNotAvailable : undefined;
+  //CheckAvailability: undefined;
 
 };
 
@@ -69,6 +71,8 @@ function MainNavigator() {
       <Stack.Screen name="QrReservationLogIn" component={QrReservationLogIn} />
       <Stack.Screen name="QrReservationNotFound" component={QrReservationNotFound} />
       <Stack.Screen name="QrBookingNotAvailable" component={QrBookingNotAvailable} />
+      {/* <Stack.Screen name="CheckAvailability" component={CheckAvailability} /> */}
+
       
     </Stack.Navigator>
   );
