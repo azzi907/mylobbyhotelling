@@ -15,7 +15,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import {useRootStoreContext} from '../Store/index';
 import {observer} from 'mobx-react';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp, widthPercentageToDP} from 'react-native-responsive-screen';
 import Loader from '../components/Loader';
 // import AnimatedLoader from 'react-native-animated-loader';
 
@@ -229,7 +229,7 @@ const SignUpScreen = (props: any) => {
                   </Button>
                 </View>
                 <View style={styles.signUp}>
-                  <Text>Already have a Account ?</Text>
+                  <Text style={{fontSize: hp(1.7)}}>Already have a Account ?</Text>
                   <TouchableOpacity
                     onPress={() => {
                       props.navigation.navigate('Login', {
@@ -250,7 +250,7 @@ const SignUpScreen = (props: any) => {
 
 const styles = StyleSheet.create({
   page: {
-    width: '100%',
+    width: widthPercentageToDP(100),
     height: '100%',
     backgroundColor: 'white',
     justifyContent: 'center',
@@ -258,26 +258,28 @@ const styles = StyleSheet.create({
   },
   welcome: {
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: hp(3),
     fontWeight: '600',
-    marginTop: hp(5),
+    marginTop: hp(10),
+    textAlign:'center',
   },
   companyLogoContainer: {
     width: 242,
-    height: hp(13),
+    height: '16.667%',
     flexDirection: 'row',
+    display: 'flex',
     justifyContent: 'center',
     alignContent: 'flex-start',
     alignSelf: 'center',
     marginTop: 30,
   },
   image: {
-    height: 130,
-    width: 200,
+    height: hp(20),
+    width: widthPercentageToDP(50),
   },
   inputField: {
     alignSelf: 'center',
-    width: '100%',
+    width: widthPercentageToDP(80),
     height: 40,
     marginTop: hp(4),
   },
@@ -285,11 +287,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
+
   },
   signUpText: {
     textDecorationLine: 'underline',
     color: '#2F8AF5',
     fontStyle: 'italic',
+    fontSize: hp(1.7),
   },
   lottie: {
     width: 100,

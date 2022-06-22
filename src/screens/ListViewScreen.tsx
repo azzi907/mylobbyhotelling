@@ -11,7 +11,10 @@ import {
   SafeAreaView,
   ScrollView,
   ToastAndroid,
+  Dimensions,
 } from 'react-native';
+const {height, width} = Dimensions.get('window');
+const aspectRatio = height / width;
 import {Searchbar} from 'react-native-paper';
 import {useRootStoreContext} from '../Store';
 import {
@@ -53,8 +56,6 @@ function ListView(props: any) {
       .then(response => response.json())
       .then(result => {
         setRooms(result.rooms);
-        console.log("user Type ===>", userStore.auth.employee.category );
-        
         if (userStore.auth.employee.category === 'C') {
           setFilteredRooms(result.rooms);
         } else {
@@ -62,9 +63,9 @@ function ListView(props: any) {
           result.rooms?.forEach((room: any) => {
             const isAvailble =
               room.category === userStore.auth.employee.category;
-              if (isAvailble){
-                newCheckRooms.push(room);
-              }
+            if (isAvailble) {
+              newCheckRooms.push(room);
+            }
           });
           setFilteredRooms(newCheckRooms);
         }
@@ -74,7 +75,7 @@ function ListView(props: any) {
         ToastAndroid.show('Error fetching Available Rooms', ToastAndroid.LONG);
       });
   };
-  
+
   useEffect(() => {
     setFilteredRooms(() => {
       if (searchQuery) {
@@ -90,20 +91,26 @@ function ListView(props: any) {
   const onChangeSearch = (query: React.SetStateAction<string>) => {
     setSearchQuery(query);
   };
-  console.log("Filtered Rooms ===>" , filteredRooms);
+  console.log('Filtered Rooms ===>', filteredRooms);
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <View style={{display: 'flex', flexDirection: 'row', marginTop: 15}}>
-        <TouchableOpacity
+          <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
               props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
+            <Image
+              style={{marginTop: 3, height: hp(1.5), width: wp(2.5)}}
+              source={BACK_ICON}
+            />
+            <Text style={{color: '#51D1FA', marginLeft: 4, fontSize: hp(1.7)}}>
+              Back
+            </Text>
           </TouchableOpacity>
-          <Text style={{marginLeft: wp(5), fontWeight: '500', fontSize:hp(1.5)}}>
+          <Text
+            style={{marginLeft: wp(5), fontWeight: '500', fontSize: hp(1.5)}}>
             Search results
           </Text>
         </View>
@@ -134,7 +141,12 @@ function ListView(props: any) {
           placeholder="Search"
           value={searchQuery}
           onChangeText={onChangeSearch}
-          style={{marginTop: hp(1.5), borderRadius: hp(2) , height: hp(6) , fontSize:hp(5)}}
+          style={{
+            marginTop: hp(1.5),
+            borderRadius: hp(2),
+            height: hp(6),
+            fontSize: hp(5),
+          }}
         />
         <ScrollView
           style={{height: '80%'}}
@@ -142,44 +154,56 @@ function ListView(props: any) {
           {filteredRooms?.map((roomData: any) => {
             return (
               <View style={styles.boxShadow}>
-              <View style={styles.box} key={roomData.id}>
-                <View style={styles.box2}>
-                  <Image
-                    style={styles.menuimg}
-                    source={{
-                      uri: `${BACKEND_URL}/api/rooms/getAvatar/${roomData.id}?small=true`,
-                    }}
-                  />
-                  <View style={{padding: 15}}>
-                    <Text
-                      style={{
-                        marginLeft:wp(2),
-                        fontSize: wp(5),
-                        fontWeight: '700',
-                      }}>
-                      {roomData.name}
-                    </Text>
-                    <Text style={styles.headings}>{roomData.location}</Text>
-                    <Text style={styles.headings}>Category: {roomData.category === 'A' ? 'Regular' : 'Executive'}</Text>
-                    <Text style={styles.headings}>
-                      Capacity: {roomData.capacity}
-                    </Text>
-                    <Text style={styles.headings}>
-                      AV: {roomData.description}
-                    </Text>
+                <View
+                  style={[
+                    styles.box,
+                    {height: aspectRatio > 1.6 ? hp(21) : hp(24)},
+                  ]}
+                  key={roomData.id}>
+                  <View
+                    style={[
+                      styles.box2,
+                      {height: aspectRatio > 1.6 ? hp(16.5) : hp(20)},
+                    ]}>
+                    <Image
+                      style={[styles.menuimg, {width: wp(30), height: aspectRatio > 1.6 ?  hp(13) : hp(16)}]}
+                      source={{
+                        uri: `${BACKEND_URL}/api/rooms/getAvatar/${roomData.id}?small=true`,
+                      }}
+                    />
+                    <View style={{padding: 15}}>
+                      <Text
+                        style={{
+                          marginLeft: wp(2),
+                          fontSize: wp(5),
+                          fontWeight: '700',
+                        }}>
+                        {roomData.name}
+                      </Text>
+                      <Text style={styles.headings}>{roomData.location}</Text>
+                      <Text style={styles.headings}>
+                        Category:{' '}
+                        {roomData.category === 'A' ? 'Regular' : 'Executive'}
+                      </Text>
+                      <Text style={styles.headings}>
+                        Capacity: {roomData.capacity}
+                      </Text>
+                      <Text style={styles.headings}>
+                        AV: {roomData.description}
+                      </Text>
+                    </View>
                   </View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      props.navigation.navigate('BookNow', {
+                        roomName: roomData.name,
+                        roomId: roomData.id,
+                        ...props.route.params,
+                      });
+                    }}>
+                    <Text style={styles.bookNow}>Book Now</Text>
+                  </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    props.navigation.navigate('BookNow', {
-                      roomName: roomData.name,
-                      roomId: roomData.id,
-                      ...props.route.params,
-                    });
-                  }}>
-                  <Text style={styles.bookNow}>Book Now</Text>
-                </TouchableOpacity>
-              </View>
               </View>
             );
           })}
@@ -198,7 +222,7 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '95%',
-    height:'99.5%',
+    height: '99.5%',
     alignSelf: 'center',
     display: 'flex',
     flexDirection: 'column',
@@ -211,25 +235,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   box: {
-    marginLeft:wp(1),
+    marginLeft: wp(1),
     width: '98%',
-    height: hp(25),
     marginTop: 20,
-    borderRadius: wp(5),
+    borderRadius: wp(8),
     overflow: 'hidden',
-    backgroundColor:'white',
-   
+    backgroundColor: 'white',
   },
   box2: {
-    height: hp(19),
     display: 'flex',
     flexDirection: 'row',
   },
   menuimg: {
     marginLeft: wp(3),
     marginTop: hp(2),
-    width: wp(27),
-    height: hp(16),
+    borderRadius: wp(4)
   },
   listView: {
     textDecorationLine: 'underline',
@@ -241,7 +261,7 @@ const styles = StyleSheet.create({
     height: hp(50),
     backgroundColor: '#51D1FA',
     textAlign: 'center',
-    fontSize: hp(4),
+    fontSize: hp(3),
     textAlignVertical: 'center',
     color: 'white',
     borderBottomLeftRadius: 30,
@@ -252,9 +272,9 @@ const styles = StyleSheet.create({
     fontSize: hp(2),
     fontWeight: '500',
   },
-  boxShadow:{
+  boxShadow: {
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: {
       width: 1,
       height: 4,
@@ -262,6 +282,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
     elevation: 9,
-  }
+  },
 });
 export default observer(ListView);

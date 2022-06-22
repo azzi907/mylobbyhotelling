@@ -241,7 +241,7 @@ function MyMeetings(props: any) {
               placeholder="Search Meeting"
               value={searchQuery}
               onChangeText={onChangeSearch}
-              style={{marginTop: 10, height:hp(7.2) , borderRadius :wp(3)}}
+              style={{marginTop: 10, height:hp(5.7) , borderRadius :wp(3)}}
             />
           </View>
           <View style={{width: wp(42)}}>
@@ -253,7 +253,7 @@ function MyMeetings(props: any) {
                     : new Date().toDateString()}
                 </Text>
                 <Image
-                  style={{marginTop: wp(3.4), marginLeft: wp(5) , width:wp(3.5) , height:hp(2)}}
+                  style={{marginTop: wp(2.8), marginLeft: wp(5.5) , width:wp(3.5) , height:hp(2)}}
                   source={CALENDAR}
                 />
               </View>
@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
     fontSize: wp(3.1),
   },
   date: {
-    height: hp(7.2),
+    height: hp(5.7),
     width: '100%',
     marginTop: 10,
     borderWidth: 3,
@@ -444,12 +444,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     borderRadius: wp(3),
   },
-  dateText: {
-    fontSize: hp(3.5),
-  },
   dateInputText: {
-    fontSize: wp(3.5),
-    paddingTop: hp(2),
+    fontSize: wp(3.2),
+    paddingTop: hp(1.5),
     marginLeft: wp(2.5),
   },
   nameHeading: {
@@ -499,7 +496,7 @@ const styles = StyleSheet.create({
   },
   cancleMeeting: {
     marginLeft: wp(2.5),
-    fontSize:hp(2.1)
+    fontSize:hp(1.8)
   },
   editImg: {
     justifyContent: 'flex-end',

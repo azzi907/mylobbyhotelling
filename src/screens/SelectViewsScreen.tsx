@@ -7,12 +7,18 @@ import {
   Image,
   TouchableOpacity,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
-import { widthPercentageToDP , heightPercentageToDP} from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP,
+  heightPercentageToDP,
+} from 'react-native-responsive-screen';
 
 export default function SelectViews(props: any) {
   const MENU_BAR = require('../../images/list-view.png');
   const LOC_IMG = require('../../images/floor-plan-view.png');
+  const {height, width} = Dimensions.get('window');
+  const aspectRatio = height / width;
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -26,13 +32,23 @@ export default function SelectViews(props: any) {
                 ...props.route.params,
               });
             }}>
-            <View style={styles.box}>
-              <Image style={styles.menuimg} resizeMode="contain" source={MENU_BAR} />
+            <View
+              style={[
+                styles.box,
+                {
+                  height:aspectRatio > 1.6 ? heightPercentageToDP(11) : heightPercentageToDP(15) ,
+                }
+              ]}>
+              <Image
+                style={styles.menuimg}
+                resizeMode="contain"
+                source={MENU_BAR}
+              />
               <Text
                 style={{
                   marginLeft: widthPercentageToDP(3),
                   textAlignVertical: 'center',
-                  fontSize: heightPercentageToDP(3),
+                  fontSize: heightPercentageToDP(2.7),
                 }}>
                 List View
               </Text>
@@ -45,13 +61,22 @@ export default function SelectViews(props: any) {
               ...props.route.params,
             });
           }}>
-          <View style={styles.box}>
-            <Image style={styles.menuimg} resizeMode = "contain" source={LOC_IMG} />
+          <View style={[
+                styles.box,
+                {
+                  height:aspectRatio > 1.6 ? heightPercentageToDP(11) : heightPercentageToDP(15) ,
+                }
+              ]}>
+            <Image
+              style={styles.menuimg}
+              resizeMode="contain"
+              source={LOC_IMG}
+            />
             <Text
               style={{
                 marginLeft: widthPercentageToDP(3),
                 textAlignVertical: 'center',
-                fontSize: heightPercentageToDP(3),
+                fontSize: heightPercentageToDP(2.7),
               }}>
               Floor Plan View
             </Text>
@@ -77,12 +102,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 80,
     paddingHorizontal: 80,
-    fontSize: widthPercentageToDP(4),
+    fontSize: widthPercentageToDP(5),
     fontWeight: '500',
   },
   box: {
     width: widthPercentageToDP(75),
-    height: heightPercentageToDP(13),
+    height: heightPercentageToDP(11),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -102,7 +127,6 @@ const styles = StyleSheet.create({
     marginLeft: widthPercentageToDP(2),
     width: widthPercentageToDP(13.5),
     height: heightPercentageToDP(13.5),
-
   },
   container: {
     display: 'flex',

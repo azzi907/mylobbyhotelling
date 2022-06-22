@@ -120,11 +120,11 @@ const styles = StyleSheet.create({
   textStyle: {
     color: '#fff',
     textAlign: 'center',
-    fontSize: wp(3),
+    fontSize: hp(1.5),
     marginTop: 3,
   },
   img: {
-    padding: hp(0.9),
+    padding: hp(0.95),
     alignSelf:'center',
   },
   container: {

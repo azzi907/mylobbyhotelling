@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     fontSize: hp(3),
     fontWeight: '600',
     marginTop: hp(10),
+    textAlign:'center',
   },
   companyLogoContainer: {
     width: 242,
@@ -195,7 +196,7 @@ const styles = StyleSheet.create({
   inputField: {
     alignSelf: 'center',
     width: widthPercentageToDP(85),
-    height: hp(6),
+    height: 40,
     marginTop: hp(5),
   },
   signUp: {

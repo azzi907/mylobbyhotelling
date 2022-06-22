@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
   SafeAreaView,
+  Dimensions
 } from 'react-native';
 import React, {useState} from 'react';
 import {useRootStoreContext} from '../Store';
@@ -28,7 +29,10 @@ function BookingScreen(props: any) {
   const [ical, setiIcal] = useState('');
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
+  const {height, width} = Dimensions.get('window'); 
+  const aspectRatio = height/width;
+  console.log("aspect ratio===>" , aspectRatio);
+  
   const LOGOUT_IMG = require('../../images/logout-image.png');
   const QR_CODE = require('../../images/qr-code-image.png');
   const months = [
@@ -160,7 +164,7 @@ function BookingScreen(props: any) {
           <View style={styles.row}>
             <Button
               color={'#4299E1'}
-              labelStyle={{...styles.buttonText, width: 80}}
+              labelStyle={{...styles.buttonText, width: 80 , lineHeight: aspectRatio < 1.6 ? wp(5.5): hp(20)}}
               style={{borderRadius: 20, marginTop: 15}}
               mode="contained"
               onPress={hideModal}>
@@ -168,7 +172,7 @@ function BookingScreen(props: any) {
             </Button>
             <Button
               color={'#4299E1'}
-              labelStyle={{...styles.buttonText, width: 80}}
+              labelStyle={{...styles.buttonText, width: 80 }}
               style={{borderRadius: 20, marginTop: 15}}
               mode="contained"
               onPress={() => saveIcal()}>
@@ -180,7 +184,7 @@ function BookingScreen(props: any) {
       <Text
         style={{
           ...styles.welcome,
-          fontSize: hp(4),
+          fontSize: hp(3),
           paddingHorizontal: 10,
           textAlign: 'center',
         }}>
@@ -199,8 +203,8 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: wp(6), marginTop: hp(2) , height:hp(5.4)}}
+        labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height:wp(10)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Meeting Desk', false, false, true)
@@ -211,8 +215,8 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: wp(6), marginTop: hp(2) , height:hp(5.4)}}
+        labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height:wp(10)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Private Office', false, true, false)
@@ -223,13 +227,25 @@ function BookingScreen(props: any) {
       <View style={styles.buttonShadow}>
         <Button
           color={'#4299E1'}
-          labelStyle={styles.buttonText}
-          style={{borderRadius: wp(6), marginTop: hp(2), height:hp(5.4)}}
+          labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
+          style={{borderRadius: wp(6), marginTop: hp(2), height:wp(10)}}
           mode="contained"
           onPress={() =>
             calenderEvent('Booked Meeting Room', true, false, false)
           }>
           Book Meeting Room
+        </Button>
+      </View>
+      <View style={styles.buttonShadow}>
+        <Button
+          color={'#4299E1'}
+          labelStyle={[styles.buttonText ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8)}]}
+          style={{borderRadius: wp(6), marginTop: hp(2), height:wp(10)}}
+          mode="contained"
+          onPress={() =>
+            props.navigation.navigate("CheckAvailability")
+          }>
+          Check Availability
         </Button>
       </View>
       <View style={styles.logout}>
@@ -267,7 +283,7 @@ const styles = StyleSheet.create({
   },
   welcome: {
     marginTop: hp(5),
-    fontSize: hp(4),
+    fontSize: hp(3.5),
   },
   companyLogo: {
     width: wp(30),
@@ -277,8 +293,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     width: wp(75),
-    fontSize: hp(2.5),
-    lineHeight: wp(5),
+    fontSize: wp(4),
   },
   icalButton: {
     width: 100,

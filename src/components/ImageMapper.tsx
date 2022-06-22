@@ -111,8 +111,8 @@ class ImageMapper extends Component {
                   <Image
                     source={SOCIAL_DISTANCING}
                     style={{
-                      height: hp(2),
-                      width: wp(4),
+                      height: 20,
+                      width: 20,
                     }}
                   />
                 ) : null}
