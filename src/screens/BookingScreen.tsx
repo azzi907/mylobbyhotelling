@@ -31,8 +31,6 @@ function BookingScreen(props: any) {
   const hideModal = () => setVisible(false);
   const {height, width} = Dimensions.get('window'); 
   const aspectRatio = height/width;
-  console.log("aspect ratio===>" , aspectRatio);
-  
   const LOGOUT_IMG = require('../../images/logout-image.png');
   const QR_CODE = require('../../images/qr-code-image.png');
   const months = [
@@ -195,6 +193,7 @@ function BookingScreen(props: any) {
         Room Booking
       </Text>
       <Image
+      resizeMode='contain'
         source={{
           uri: `${BACKEND_URL}/api/sites/getLogo/${userStore.auth.sites[0]?.id}?small=true`,
         }}
@@ -286,8 +285,8 @@ const styles = StyleSheet.create({
     fontSize: hp(3.5),
   },
   companyLogo: {
-    width: wp(30),
-    height: hp(25),
+    width: wp(35),
+    height: hp(20),
     marginTop: hp(2),
   },
   buttonText: {

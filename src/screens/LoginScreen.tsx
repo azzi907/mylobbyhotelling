@@ -7,6 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
@@ -76,7 +78,16 @@ const LoginScreen = (props: any) => {
             props.navigation.navigate('Init');
           });
       })
-      .catch(error => console.log('error  ==>', error));
+      .catch(error => {console.log('error  ==>', error)
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(
+          "Invalid credentials, Please try again or sing-up for new account",
+          ToastAndroid.LONG,
+        );
+      } else {
+        Alert.alert("Invalid credentials , please try again or sing-up for new account");
+      }}
+      );
   };
   return (
     <View style={styles.page}>
