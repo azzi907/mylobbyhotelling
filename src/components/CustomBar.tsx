@@ -5,6 +5,7 @@ import React from 'react';
 import USER from '../../images/user.png';
 import BOOK_DESK from '../../images/Union.png';
 import MY_MEET from '../../images/icon.png';
+import Ocupancy from '../../images/occurency.png';
 
 import {useRootStoreContext} from '../Store';
 import {
@@ -82,6 +83,30 @@ function CustomTabBar(props: any) {
           </Text>
         </View>
       </TouchableOpacity>
+      {/* <TouchableOpacity
+        onPress={() => {
+          navigateToMyMeetings();
+          setSelectedMeet(true);
+          setSelectedDesk(false);
+          setSelectedColl(false);
+        }}>
+        <View style={styles.container}>
+          <Image
+            style={[
+              styles.img,
+              {tintColor: selectedMeet ? '#51D1FA' : '#ffffff'},
+            ]}
+            source={Ocupancy}
+          />
+          <Text
+            style={[
+              styles.textStyle,
+              {color: selectedMeet ? '#51D1FA' : '#ffffff'},
+            ]}>
+            Occupancy
+          </Text>
+        </View>
+      </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => {
           navigateToMyMeetings();
