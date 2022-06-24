@@ -29,7 +29,6 @@ function QrReservationNotFound(props: any) {
       const reservation = await RNCalendarEvents.findEventById(
         calendarItemIdentifier,
       );
-      console.log('reservation:===>', reservation);
 
       const invitees = reservation?.attendees?.slice(1);
       props.navigation.navigate('BookNow', {

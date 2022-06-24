@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ToastAndroid,
   SafeAreaView,
+  Dimensions
 } from 'react-native';
 import React, {useState} from 'react';
 import {useRootStoreContext} from '../Store';
@@ -28,7 +29,8 @@ function BookingScreen(props: any) {
   const [ical, setiIcal] = useState('');
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-
+  const {height, width} = Dimensions.get('window'); 
+  const aspectRatio = height/width;
   const LOGOUT_IMG = require('../../images/logout-image.png');
   const QR_CODE = require('../../images/qr-code-image.png');
   const months = [
@@ -121,7 +123,7 @@ function BookingScreen(props: any) {
         );
         const invitees = reservation?.attendees?.slice(1);
         props.navigation.navigate('SelectViews', {
-           startDate: reservation?.startDate,
+          startDate: reservation?.startDate,
           endDate: reservation?.endDate,
           title: reservation?.title,
           location: reservation?.location,
@@ -160,7 +162,7 @@ function BookingScreen(props: any) {
           <View style={styles.row}>
             <Button
               color={'#4299E1'}
-              labelStyle={{...styles.buttonText, width: 80}}
+              labelStyle={{...styles.buttonText, width: 80 , lineHeight: aspectRatio < 1.6 ? wp(5.5): hp(20)}}
               style={{borderRadius: 20, marginTop: 15}}
               mode="contained"
               onPress={hideModal}>
@@ -168,7 +170,7 @@ function BookingScreen(props: any) {
             </Button>
             <Button
               color={'#4299E1'}
-              labelStyle={{...styles.buttonText, width: 80}}
+              labelStyle={{...styles.buttonText, width: 80 }}
               style={{borderRadius: 20, marginTop: 15}}
               mode="contained"
               onPress={() => saveIcal()}>
@@ -180,7 +182,7 @@ function BookingScreen(props: any) {
       <Text
         style={{
           ...styles.welcome,
-          fontSize: 20,
+          fontSize: hp(3),
           paddingHorizontal: 10,
           textAlign: 'center',
         }}>
@@ -191,66 +193,76 @@ function BookingScreen(props: any) {
         Room Booking
       </Text>
       <Image
+      resizeMode='contain'
         source={{
           uri: `${BACKEND_URL}/api/sites/getLogo/${userStore.auth.sites[0]?.id}?small=true`,
         }}
         style={styles.companyLogo}
       />
+      <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 10}}
+        labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Meeting Desk', false, false, true)
         }>
         Book Hot Desk
       </Button>
+      </View>
+      <View style={styles.buttonShadow}>
       <Button
         color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 15}}
+        labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+        style={{borderRadius: wp(6), marginTop: hp(2) , height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
         mode="contained"
         onPress={() =>
           calenderEvent('Booked Private Office', false, true, false)
         }>
         Book Private Office
       </Button>
-      <Button
-        color={'#4299E1'}
-        labelStyle={styles.buttonText}
-        style={{borderRadius: 20, marginTop: 15}}
-        mode="contained"
-        onPress={() =>
-          calenderEvent('Booked Meeting Room', true, false, false)
-        }>
-        Book Meeting Room
-      </Button>
+      </View>
+      <View style={styles.buttonShadow}>
+        <Button
+          color={'#4299E1'}
+          labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(5), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+          style={{borderRadius: wp(6), marginTop: hp(2), height: aspectRatio > 1.6 ? wp(10) : wp(7)}}
+          mode="contained"
+          onPress={() =>
+            calenderEvent('Booked Meeting Room', true, false, false)
+          }>
+          Book Meeting Room
+        </Button>
+      </View>
+      {/* <View style={styles.buttonShadow}>
+        <Button
+          color={'#4299E1'}
+          labelStyle={[styles.buttonText  ,{lineHeight: aspectRatio > 1.6 ? wp(5.5) : wp(8), fontSize:aspectRatio > 1.6 ? wp(4): wp(3)}]}
+          style={{borderRadius: wp(6), marginTop: hp(2), height:wp(10)}}
+          mode="contained"
+          onPress={() =>
+            props.navigation.navigate("CheckAvailability")
+          }>
+          Check Availability
+        </Button>
+      </View> */}
       <View style={styles.logout}>
         <TouchableOpacity
           onPress={() => {
             props.navigation.navigate('QrScreen');
           }}>
           <Image style={styles.logoutImg} source={QR_CODE} />
-          <Text
-            style={styles.text}>
-            SCAN QR
-          </Text>
+          <Text style={styles.text}>SCAN QR</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             logout();
           }}>
           <Image style={styles.logoutImg} source={LOGOUT_IMG} />
-          <Text
-            style={styles.text}>
-            LOG OUT
-          </Text>
+          <Text style={styles.text}>LOG OUT</Text>
         </TouchableOpacity>
       </View>
-      {/* <Text style={{marginTop: 'auto', marginBottom: 10}}>
-        Powered by MyLobby.co
-      </Text> */}
     </SafeAreaView>
   );
 }
@@ -266,17 +278,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   welcome: {
-    marginTop: 50,
-    fontSize: 25,
+    marginTop: hp(5),
+    fontSize: hp(3.5),
   },
   companyLogo: {
-    width: wp(30),
-    height: hp(25),
+    width: wp(35),
+    height: hp(20),
     marginTop: hp(2),
   },
   buttonText: {
     color: 'white',
-    width: '70%',
+    width: wp(75),
+    
   },
   icalButton: {
     width: 100,
@@ -319,13 +332,24 @@ const styles = StyleSheet.create({
     width: hp(7),
     height: hp(7),
   },
-  text:{
+  text: {
     textAlign: 'center',
     fontSize: wp(2.5),
     fontWeight: '700',
     color: '#1C8ADB',
     marginTop: 10,
-  }
+  },
+  buttonShadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+
+    elevation: 9,
+  },
 });
 
 export default observer(BookingScreen);

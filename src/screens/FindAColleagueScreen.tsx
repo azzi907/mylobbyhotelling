@@ -12,6 +12,7 @@ import {
   ScrollView,
   Platform,
   Alert,
+  Dimensions,
 } from 'react-native';
 import ImageMapper from '../components/ImageMapper';
 import {useRootStoreContext} from '../Store';
@@ -32,6 +33,8 @@ function FindAColleague(this: any, props: any) {
   const BACK_ICON = require('../../images/back-icon.png');
   const USER_ICON = require('../../images/userIcon.png');
   const CIRC_RED = require('../../images/circle-red.png');
+  const {height, width} = Dimensions.get('window');
+  const aspectRatio = height / width;
 
   const BACKEND_URL = store.parameters.backendUrl;
   const [area, setArea] = React.useState<any>({});
@@ -247,21 +250,32 @@ function FindAColleague(this: any, props: any) {
           <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
-              props.navigation.navigate('SelectViews', {...props.route.params});
+              props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4}}>Back</Text>
+            <Image
+              style={{marginTop: 3, height: hp(1.5), width: wp(2.5)}}
+              source={BACK_ICON}
+            />
+            <Text style={{color: '#51D1FA', marginLeft: 4, fontSize: hp(1.7)}}>
+              Back
+            </Text>
           </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            justifyContent: 'center',
+            width: wp(100),
+          }}>
           <Text
             style={{
-              paddingTop: hp(3),
-              paddingLeft: wp(7),
+              textAlign: 'center',
               fontWeight: '700',
-              fontSize: hp(3.75),
+              fontSize: hp(3),
             }}>
             Find A Colleague
           </Text>
         </View>
+
         <TouchableOpacity
           onPress={() => {
             setDate(new Date());
@@ -272,6 +286,7 @@ function FindAColleague(this: any, props: any) {
               color: 'red',
               marginLeft: 'auto',
               textDecorationLine: 'underline',
+              fontSize: hp(1.5),
             }}>
             Clear Filters
           </Text>
@@ -282,14 +297,19 @@ function FindAColleague(this: any, props: any) {
             placeholder="Employee Name"
             value={searchQuery}
             onChangeText={onChangeSearch}
-            style={{marginTop: 10, borderRadius: 10}}
+            style={{marginTop: 10, borderRadius: 10, height: hp(6)}}
           />
         </View>
         <View style={{marginTop: 5, flexDirection: 'row'}}>
           <View style={{width: wp(60)}}>
-            <TouchableOpacity style={styles.date} onPress={() => setOpen(true)}>
+            <TouchableOpacity
+              style={[
+                styles.date,
+                {height: aspectRatio > 1.6 ? wp(12) : wp(8)},
+              ]}
+              onPress={() => setOpen(true)}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={styles.dateInputText}>
+                <Text style={[styles.dateInputText, {}]}>
                   {date !== null
                     ? date?.toDateString()
                     : new Date().toDateString()}
@@ -315,8 +335,18 @@ function FindAColleague(this: any, props: any) {
             onPress={() => {
               findEmployee();
             }}>
-            <View style={styles.button}>
-              <Text style={styles.btntext}>Find Colleague</Text>
+            <View
+              style={[
+                styles.button,
+                {height: aspectRatio > 1.6 ? wp(12) : wp(8)},
+              ]}>
+              <Text
+                style={[
+                  styles.btntext,
+                  {lineHeight: aspectRatio > 1.6 ? wp(12) : wp(8)},
+                ]}>
+                Find Colleague
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -368,7 +398,15 @@ function FindAColleague(this: any, props: any) {
         </View>
       </View>
       <View style={styles.box}>
-        <Text style={{alignSelf: 'center', fontWeight: '600'}}>Legend</Text>
+        <Text
+          style={{
+            alignSelf: 'center',
+            fontWeight: '700',
+            marginTop: hp(0.5),
+            fontSize: hp(2.2),
+          }}>
+          Legend
+        </Text>
         <View
           style={{
             display: 'flex',
@@ -378,11 +416,25 @@ function FindAColleague(this: any, props: any) {
           }}>
           <View style={styles.legendDescription}>
             <Text style={styles.text}>Your Colleague</Text>
-            <Image source={USER_ICON} style={styles.userContainer} />
+            <Image
+              source={USER_ICON}
+              resizeMode="contain"
+              style={{
+                width: aspectRatio > 1.6 ? wp(8) : wp(5),
+                height: aspectRatio > 1.6 ? hp(4) : hp(4),
+              }}
+            />
           </View>
           <View style={styles.legendDescription}>
             <Text style={styles.text}>Other Users</Text>
-            <Image style={styles.userContainerCirc} source={CIRC_RED} />
+            <Image
+              resizeMode="contain"
+              style={{
+                width: aspectRatio > 1.6 ? wp(6) : wp(4),
+                height: aspectRatio > 1.6 ? hp(4) : hp(4.2),
+              }}
+              source={CIRC_RED}
+            />
           </View>
         </View>
       </View>
@@ -418,64 +470,63 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   box: {
-    width: wp(80),
-    height: hp(8),
+    width: wp(85),
+    height: hp(9),
     marginTop: 10,
     bottom: 0,
-    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.32,
+    shadowRadius: 5.46,
+    elevation: 9,
+    backgroundColor: 'white',
   },
   legendDescription: {
+    width: wp(30),
     display: 'flex',
     flexDirection: 'row',
-  },
-  circle: {
-    marginTop: 4,
-    backgroundColor: 'yellow',
-    width: 11,
-    height: 11,
-    borderRadius: 50,
+    justifyContent: 'space-evenly',
   },
   date: {
-    height: wp(12),
     marginTop: 10,
     borderWidth: 3,
     borderColor: '#dddddd',
-    borderRadius: 8,
+    borderRadius: wp(3),
     textAlign: 'center',
   },
   dateText: {
     fontSize: hp(3.8),
-    padding: hp(4),
     textAlign: 'center',
   },
   dateInputText: {
-    fontSize: wp(4),
-    paddingTop: wp(2.8),
+    fontSize: hp(2.2),
+    paddingTop: hp(1.5),
     marginLeft: wp(5),
   },
   img: {
     marginLeft: 'auto',
-    marginRight: 10,
-    padding: 10,
-    marginTop: 10,
+    marginRight: wp(2),
+    padding: wp(2),
+    marginTop: hp(1.8),
   },
   inputStyle: {
-    fontSize: wp(5),
+    fontSize: hp(2.5),
   },
   button: {
-    height: wp(12),
     backgroundColor: '#2F8AF5',
     width: wp(32),
     marginLeft: wp(2.5),
     marginTop: 10,
-    borderRadius: 10,
+    borderRadius: wp(2.5),
   },
   btntext: {
     fontSize: wp(3.8),
     textAlign: 'center',
     color: 'white',
-    fontWeight: '700',
-    marginTop: wp(3.7),
+    fontWeight: '600',
   },
   popUp: {
     borderWidth: 0.2,
@@ -513,17 +564,16 @@ const styles = StyleSheet.create({
   text: {
     fontSize: wp(2.7),
     fontWeight: '600',
-    lineHeight: wp(7),
+    lineHeight: hp(4),
   },
-  userContainer: {
-    width: wp(8),
-    height: hp(4),
-  },
+  // userContainer: {
+  //   width: wp(8),
+  //   height: hp(5),
+  // },
   userContainerCirc: {
-    width: wp(5.7),
-    height: hp(2.9),
-    marginLeft: 5,
-    marginTop: 5,
+    width: hp(2.8),
+    height: hp(2.8),
+    marginTop: wp(0.5),
   },
 });
 export default observer(FindAColleague);

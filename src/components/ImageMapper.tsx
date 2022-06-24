@@ -84,39 +84,40 @@ class ImageMapper extends Component {
           style={{height: imgHeight, width: imgWidth}}
           source={{uri: `${imgSource}`}}>
           {imgMap?.map((item: any, index: any) => (
-            <TouchableOpacity
-              key={item.id}
-              onPress={event => onPress(item, index, event)}
-              style={[{position: 'absolute'}, this.buildStyle(item)]}>
-              {item.prefill === '#324fb650' && item.fill === '#324fb650' ? (
-                <BlinkView
-                  useNativeDriver={false}
-                  blinking={
-                    item.prefill === '#324fb650' && item.fill === '#324fb650'
-                      ? true
-                      : false
-                  }
-                  delay={600}>
-                  <Image
-                    source={
-                      USER_ICON
+            <>
+              {item.fill === 'yellow' ? null :
+              <TouchableOpacity
+                key={item.id}
+                onPress={event => onPress(item, index, event)}
+                style={[{position: 'absolute'}, this.buildStyle(item)]}>
+                {item.prefill === '#324fb650' && item.fill === '#324fb650' ? (
+                  <BlinkView
+                    useNativeDriver={false}
+                    blinking={
+                      item.prefill === '#324fb650' && item.fill === '#324fb650'
+                        ? true
+                        : false
                     }
+                    delay={600}>
+                    <Image
+                      source={USER_ICON}
+                      style={{
+                        height: hp(3.5),
+                        width: wp(7),
+                      }}
+                    />
+                  </BlinkView>
+                ) : item.prefill === 'white' && item.fill === 'white' ? (
+                  <Image
+                    source={SOCIAL_DISTANCING}
                     style={{
-                      height: hp(3.5),
-                      width: wp(7)
+                      height: 20,
+                      width: 20,
                     }}
                   />
-                </BlinkView>
-              ) : item.prefill === 'white' && item.fill === 'white' ? (
-                <Image
-                  source={SOCIAL_DISTANCING}
-                  style={{
-                    height: hp(2),
-                    width: wp(4)
-                  }}
-                />
-              ) : null}
-            </TouchableOpacity>
+                ) : null}
+              </TouchableOpacity>}
+            </>
           ))}
         </ImageBackground>
       </View>

@@ -12,7 +12,7 @@ interface Parameter {
 
 export default class State {
   parameters: Parameter = {
-    backendUrl: 'https://eme.my-lobby.com',
+    backendUrl: 'https://admin.my-lobby.com',
   };
 
   constructor(public mobXRootStore: MobXRootStore) {

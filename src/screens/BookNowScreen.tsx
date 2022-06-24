@@ -48,7 +48,6 @@ function BookNow(props: any) {
         .then(response => response.json())
         .then((result: any) => {
           
-          console.log('Result ===> ', result.available);
           if (result.available === true) {
             const requestOptions = {
               method: 'POST',
@@ -108,7 +107,6 @@ function BookNow(props: any) {
         });
     }
     if (!props.route.params.isQrScanned) {
-      console.log('Yesss');
       const requestOptions = {
         method: 'POST',
         headers: {

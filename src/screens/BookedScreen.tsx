@@ -12,7 +12,6 @@ function Booked(props: any) {
     props.navigation.navigate('Booking');
   };
   setTimeout(callBack, 3000);
-  console.log('props.route.params.evCode ==> ', props.route.params.evCode);
 
   return (
     <SafeAreaView style={styles.page}>

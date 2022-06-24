@@ -42,6 +42,7 @@ function MyMeetings(props: any) {
   const [filteredRooms, setFilteredRooms] = useState<any>([]);
   const BACKEND_URL = store.parameters.backendUrl;
   const isFocused = useIsFocused();
+  
   const getMeetings = async () => {
     const requestOptions = {
       method: 'POST',
@@ -56,6 +57,8 @@ function MyMeetings(props: any) {
     fetch(`${BACKEND_URL}/api/rooms_reservations/meetings`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        console.log("Result of Filtered Rooms====>", result.reservations);
+        
         setMeetingRooms(result.reservations);
         setFilteredRooms(result.reservations);
       })
@@ -84,7 +87,6 @@ function MyMeetings(props: any) {
     )
       .then(response => response.json())
       .then(result => {
-        console.log(result);
         getMeetings();
       })
       .catch(error => {
@@ -128,15 +130,12 @@ function MyMeetings(props: any) {
     const result = await AddCalendarEvent.presentEventEditingDialog({
       eventId: data.meetingId,
     });
-    console.log('Result ======> ', result);
 
     if (
       (result.action === 'SAVED' && Platform.OS === 'ios') ||
       (result.action === 'CANCELED' && Platform.OS === 'android')
     ) {
       const reservation = await RNCalendarEvents.findEventById(data.meetingId);
-      console.log('Reservation ====> ', reservation);
-
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -201,6 +200,7 @@ function MyMeetings(props: any) {
     setRefreshing(false)
   });
   }, []);
+  
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
@@ -210,8 +210,8 @@ function MyMeetings(props: any) {
             onPress={() => {
               props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4}}>Back</Text>
+            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
+            <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
           </TouchableOpacity>
         </View>
 
@@ -229,6 +229,7 @@ function MyMeetings(props: any) {
               color: 'red',
               marginLeft: 'auto',
               textDecorationLine: 'underline',
+              fontSize:hp(2)
             }}>
             Clear Filters
           </Text>
@@ -240,7 +241,7 @@ function MyMeetings(props: any) {
               placeholder="Search Meeting"
               value={searchQuery}
               onChangeText={onChangeSearch}
-              style={{marginTop: 10, borderRadius: 10}}
+              style={{marginTop: 10, height:hp(5.7) , borderRadius :wp(3)}}
             />
           </View>
           <View style={{width: wp(42)}}>
@@ -252,7 +253,7 @@ function MyMeetings(props: any) {
                     : new Date().toDateString()}
                 </Text>
                 <Image
-                  style={{marginTop: 12, marginLeft: 15}}
+                  style={{marginTop: wp(2.8), marginLeft: wp(5.5) , width:wp(3.5) , height:hp(2)}}
                   source={CALENDAR}
                 />
               </View>
@@ -435,21 +436,17 @@ const styles = StyleSheet.create({
     fontSize: wp(3.1),
   },
   date: {
-    height: 48,
+    height: hp(5.7),
     width: '100%',
     marginTop: 10,
     borderWidth: 3,
     borderColor: '#dddddd',
     marginLeft: 10,
-    borderRadius: 8,
-  },
-  dateText: {
-    fontSize: hp(3.5),
-    padding: hp(4),
+    borderRadius: wp(3),
   },
   dateInputText: {
-    fontSize: hp(1.7),
-    paddingTop: 13,
+    fontSize: wp(3.2),
+    paddingTop: hp(1.5),
     marginLeft: wp(2.5),
   },
   nameHeading: {
@@ -499,6 +496,7 @@ const styles = StyleSheet.create({
   },
   cancleMeeting: {
     marginLeft: wp(2.5),
+    fontSize:hp(1.8)
   },
   editImg: {
     justifyContent: 'flex-end',

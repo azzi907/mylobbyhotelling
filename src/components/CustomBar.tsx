@@ -79,10 +79,8 @@ function CustomTabBar(props: any) {
         }}>
         <View style={styles.container}>
           <Image
-            style={[
-              [styles.img, {tintColor: selectedColl ? '#51D1FA' : '#ffffff'}],
-              {marginLeft: wp(10)},
-            ]}
+            style={
+              [styles.img, {tintColor: selectedColl ? '#51D1FA' : '#ffffff'}]}
             source={USER}
           />
           <Text
@@ -94,6 +92,7 @@ function CustomTabBar(props: any) {
           </Text>
         </View>
       </TouchableOpacity>
+   
       <TouchableOpacity
         onPress={() => {
           navigateToOccupancy();
@@ -127,7 +126,7 @@ function CustomTabBar(props: any) {
           setSelectedDesk(false);
           setSelectedColl(false);
         }}>
-        <View style={[styles.container, {marginTop: hp(1)}]}>
+        <View style={styles.container}>
           <Image
             style={[
               styles.img,
@@ -149,25 +148,25 @@ function CustomTabBar(props: any) {
 }
 const styles = StyleSheet.create({
   TabBarMainContainer: {
-    justifyContent: 'space-around',
+    justifyContent: 'space-evenly',
     height: hp(7.5),
     flexDirection: 'row',
     position: 'relative',
     backgroundColor: 'black',
-    alignItems: 'center',
   },
   textStyle: {
     color: '#fff',
     textAlign: 'center',
-    fontSize: wp(3),
+    fontSize: hp(1.5),
     marginTop: 3,
   },
   img: {
-    padding: hp(0.9),
-    marginLeft: hp(3),
+    padding: hp(0.95),
+    alignSelf:'center',
   },
   container: {
     flexDirection: 'column',
+    justifyContent: 'center',
     padding: hp(1),
     marginTop: hp(0.5),
   },

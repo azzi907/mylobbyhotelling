@@ -7,13 +7,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  ToastAndroid,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import {useRootStoreContext} from '../Store/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {observer} from 'mobx-react';
-import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {heightPercentageToDP as hp, widthPercentageToDP} from 'react-native-responsive-screen';
 
 const LoginScreen = (props: any) => {
   const {store, userStore} = useRootStoreContext();
@@ -44,6 +46,7 @@ const LoginScreen = (props: any) => {
       body: raw,
       redirect: 'follow',
     };
+    console.log("url==>" , BACKEND_URL);
     fetch(`${BACKEND_URL}/api/employees/login?siteId=${siteId}`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
@@ -75,7 +78,16 @@ const LoginScreen = (props: any) => {
             props.navigation.navigate('Init');
           });
       })
-      .catch(error => console.log('error  ==>', error));
+      .catch(error => {console.log('error  ==>', error)
+      if (Platform.OS === 'android') {
+        ToastAndroid.show(
+          "Invalid credentials, Please try again or sing-up for new account",
+          ToastAndroid.LONG,
+        );
+      } else {
+        Alert.alert("Invalid credentials , please try again or sing-up for new account");
+      }}
+      );
   };
   return (
     <View style={styles.page}>
@@ -146,7 +158,7 @@ const LoginScreen = (props: any) => {
                 </Button>
               </View>
               <View style={styles.signUp}>
-                <Text>Don't have a Account ?</Text>
+                <Text style={{fontSize:hp(1.7)}}>Don't have a Account ?</Text>
                 <TouchableOpacity
                   onPress={() => {
                     props.navigation.navigate('SignUp', {
@@ -173,9 +185,10 @@ const styles = StyleSheet.create({
   },
   welcome: {
     alignSelf: 'center',
-    fontSize: 20,
+    fontSize: hp(3),
     fontWeight: '600',
-    marginTop: 90,
+    marginTop: hp(10),
+    textAlign:'center',
   },
   companyLogoContainer: {
     width: 242,
@@ -188,12 +201,12 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   image: {
-    height: 130,
-    width: 200,
+    height: hp(20),
+    width: widthPercentageToDP(50),
   },
   inputField: {
     alignSelf: 'center',
-    width: '100%',
+    width: widthPercentageToDP(85),
     height: 40,
     marginTop: hp(5),
   },
@@ -206,6 +219,7 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     color: '#2F8AF5',
     fontStyle: 'italic',
+    fontSize: hp(1.7),
   },
 });
 export default observer(LoginScreen);

@@ -4,14 +4,9 @@ import React, {useEffect} from 'react';
 
 export default function ReservationScreen(props: any) {
   const reservation = JSON.parse(props.route.params.reservation);
-  console.log('====================================');
-  console.log('params on reserve screen =>', props.route.params);
-  console.log('====================================');
+  
   useEffect(() => {
     setTimeout(() => {
-      console.log('====================================');
-      console.log('after 3 seconds');
-      console.log('====================================');
       props.navigation.navigate('Booking');
     }, 3000);
   }, []);

@@ -42,8 +42,6 @@ function BookNow(props: any) {
       .then(response => response.json())
       .then(result => {
         if (result) {
-          console.log('result 222 ===>', result.reservation);
-
           const requestOptions = {
             method: 'POST',
             headers: {

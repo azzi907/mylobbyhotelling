@@ -11,7 +11,6 @@ import {
 function QrReservationLogIn(props: any) {
   const {userStore} = useRootStoreContext();
   const BOOKED = require('../../images/check-mark.png');
-  console.log("props ===>" , props.route.params);
   
   const callBack = () => {
     props.navigation.navigate('Booking');
