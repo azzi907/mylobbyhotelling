@@ -136,6 +136,7 @@ function BookNow(props: any) {
           bookedTimeOut: newEndDate,
           timeZone: RNLocalize.getTimeZone(),
           meetingId: props.route.params.meetingId,
+          floorName: props.route.params.floorName,
         }),
       };
 

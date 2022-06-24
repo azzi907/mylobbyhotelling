@@ -193,17 +193,17 @@ function ListView(props: any) {
                       </Text>
                     </View>
                   </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      props.navigation.navigate('BookNow', {
-                        roomName: roomData.name,
-                        roomId: roomData.id,
-                        ...props.route.params,
-                      });
-                    }}>
-                    <Text style={styles.bookNow}>Book Now</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    props.navigation.navigate('BookNow', {
+                      roomName: roomData.name,
+                      roomId: roomData.id,
+                      floorName: roomData.location,
+                      ...props.route.params,
+                    });
+                  }}>
+                  <Text style={styles.bookNow}>Book Now</Text>
+                </TouchableOpacity>
               </View>
             );
           })}

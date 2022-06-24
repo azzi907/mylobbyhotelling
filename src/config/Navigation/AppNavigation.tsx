@@ -21,7 +21,7 @@ import QrExistingReservation from '../../screens/QrExistingReservation';
 import QrReservationLogIn from '../../screens/QrReservationLogInScreen';
 import QrReservationNotFound from '../../screens/QrReservationNotFoundScreen';
 import QrBookingNotAvailable from '../../screens/QrBookingNotAvailable';
-//import CheckAvailability from '../../screens/CheckAvailabiltyScreen';
+import OccupancyScreen from '../../screens/OccupancyScreen';
 
 type StackParamList = {
   Init: undefined;
@@ -44,8 +44,7 @@ type StackParamList = {
   QrReservationLogIn : undefined;
   QrReservationNotFound : undefined;
   QrBookingNotAvailable : undefined;
-  //CheckAvailability: undefined;
-
+  OccupancyScreen : undefined;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -71,9 +70,7 @@ function MainNavigator() {
       <Stack.Screen name="QrReservationLogIn" component={QrReservationLogIn} />
       <Stack.Screen name="QrReservationNotFound" component={QrReservationNotFound} />
       <Stack.Screen name="QrBookingNotAvailable" component={QrBookingNotAvailable} />
-      {/* <Stack.Screen name="CheckAvailability" component={CheckAvailability} /> */}
-
-      
+      <Stack.Screen name="OccupancyScreen" component={OccupancyScreen} />
     </Stack.Navigator>
   );
 }
@@ -87,7 +84,7 @@ export default () => {
       <Tab.Screen name="Main" component={MainNavigator} />
       <Tab.Screen name="FindColleagues" component={FindAColleague} />
       <Tab.Screen name="MyMeetings" component={MyMeetingsScreen} />
-      <Tab.Screen name="QrScreen" component={QrScreen} />
+      <Tab.Screen name="OccupancyScreen" component={OccupancyScreen} />
     </Tab.Navigator>
   );
 };
