@@ -164,7 +164,7 @@ function FloorPlanView(this: any, props: any) {
         ...props.route.params,
         roomId: resource.id,
         roomName: resource.name,
-        selectedFloorPlan: selectedFloorPlan,
+        floorName: selectedFloorPlan,
       });
     } else if (item.fill === 'white') {
       if (Platform.OS === 'android') {

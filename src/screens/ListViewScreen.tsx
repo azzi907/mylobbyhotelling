@@ -154,6 +154,7 @@ function ListView(props: any) {
                     props.navigation.navigate('BookNow', {
                       roomName: roomData.name,
                       roomId: roomData.id,
+                      floorName: roomData.location,
                       ...props.route.params,
                     });
                   }}>
