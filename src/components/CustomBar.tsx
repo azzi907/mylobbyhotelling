@@ -5,6 +5,7 @@ import React from 'react';
 import USER from '../../images/user.png';
 import BOOK_DESK from '../../images/Union.png';
 import MY_MEET from '../../images/icon.png';
+import Ocupancy from '../../images/occurency.png';
 
 import {useRootStoreContext} from '../Store';
 import {
@@ -18,6 +19,8 @@ function CustomTabBar(props: any) {
   const [selectedDesk, setSelectedDesk] = React.useState(false);
   const [selectedColl, setSelectedColl] = React.useState(false);
   const [selectedMeet, setSelectedMeet] = React.useState(false);
+  const [selectedOccupancy, setSelectedOccupancy] = React.useState(false);
+
 
   const navigateToBookingScreen = () => {
     props.navigation.navigate('Booking');
@@ -30,6 +33,11 @@ function CustomTabBar(props: any) {
   const navigateToMyMeetings = () => {
     props.navigation.navigate('MyMeetings');
   };
+
+  const navigateToOccupancy = () => {
+    props.navigation.navigate('OccupancyScreen');
+  };
+  
   return (
     <View
       style={{
@@ -39,6 +47,7 @@ function CustomTabBar(props: any) {
       <TouchableOpacity
         onPress={() => {
           navigateToBookingScreen();
+          setSelectedOccupancy(false);
           setSelectedDesk(true);
           setSelectedColl(false);
           setSelectedMeet(false);
@@ -63,6 +72,7 @@ function CustomTabBar(props: any) {
       <TouchableOpacity
         onPress={() => {
           navigateToFindColleague();
+          setSelectedOccupancy(false);
           setSelectedColl(true);
           setSelectedMeet(false);
           setSelectedDesk(false);
@@ -86,7 +96,33 @@ function CustomTabBar(props: any) {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
+          navigateToOccupancy();
+          setSelectedOccupancy(true);
+          setSelectedMeet(false);
+          setSelectedDesk(false);
+          setSelectedColl(false);
+        }}>
+        <View style={styles.container}>
+          <Image
+            style={[
+              styles.img,
+              {tintColor: selectedOccupancy ? '#51D1FA' : '#ffffff'},
+            ]}
+            source={Ocupancy}
+          />
+          <Text
+            style={[
+              styles.textStyle,
+              {color: selectedOccupancy ? '#51D1FA' : '#ffffff'},
+            ]}>
+            Occupancy
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
           navigateToMyMeetings();
+          setSelectedOccupancy(false);
           setSelectedMeet(true);
           setSelectedDesk(false);
           setSelectedColl(false);
