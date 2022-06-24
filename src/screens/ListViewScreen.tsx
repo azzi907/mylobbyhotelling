@@ -205,6 +205,7 @@ function ListView(props: any) {
                   <Text style={styles.bookNow}>Book Now</Text>
                 </TouchableOpacity>
               </View>
+          </View>
             );
           })}
         </ScrollView>
