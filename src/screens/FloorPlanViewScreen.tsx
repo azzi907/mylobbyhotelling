@@ -65,8 +65,6 @@ function FloorPlanView(this: any, props: any) {
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log('rooms ===>', result.rooms);
-
         setRooms(result.rooms);
       })
       .catch(error => {
@@ -77,9 +75,13 @@ function FloorPlanView(this: any, props: any) {
 
   React.useEffect(() => {
     if (selectedFloorPlan) {
+      console.log("Selected Floor Plan" , selectedFloorPlan);
+      
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
+      console.log("FloorPlan data ===> " , fp);
+      
       fp[0].areaRN?.forEach((ar: any) => {
         if (userStore.auth.employee.category !== 'C' || userStore.auth.employee.category !== '' || userStore.auth.employee.category !== undefined ) {
           const isAvailable = rooms.find(
@@ -87,8 +89,9 @@ function FloorPlanView(this: any, props: any) {
               room.location === fp[0].name &&
               room.name === ar.name &&
               room.isBlocked === false &&
-              room.category === userStore.auth.employee.category || 'A',
+              (room.category === userStore.auth.employee.category || room.category === "A"),
           );
+          console.log("Available ====> " , isAvailable);
           const blocked = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
@@ -99,7 +102,7 @@ function FloorPlanView(this: any, props: any) {
             (room: any) =>
               room.location === fp[0].name &&
               room.name === ar.name &&
-              room.category !== userStore.auth.employee.category,
+              (room.category === userStore.auth.employee.category || room.category === "A"),
           );
           if (isAvailable) {
             ar.fill = 'green';
@@ -139,6 +142,8 @@ function FloorPlanView(this: any, props: any) {
           }
         }
       });
+      console.log("Check Floor Plan ===> " ,JSON.stringify(fp[0].areaRN) );
+      
       setArea(fp[0].areaRN);
       setFloorPlan(fp[0]);
     }
@@ -158,8 +163,6 @@ function FloorPlanView(this: any, props: any) {
         setFloorPlanAll(floorPlan);
         floorPlan[0].areaRN.forEach((ar: any) => {
           if (userStore.auth.employee.category !== 'C'  || userStore.auth.employee.category !== '' || userStore.auth.employee.category !== undefined) {
-            console.log("Rooms. category ===" , rooms);
-            console.log("User.category ===" , userStore.auth.employee.category)
             const isAvailable = rooms.find(
               (room: any) =>
                 room.location === floorPlan[0].name &&
@@ -179,8 +182,6 @@ function FloorPlanView(this: any, props: any) {
                 room.name === ar.name &&
                 room.category !== userStore.auth.employee.category,
             );
-            console.log("Available ====>", isAvailable);
-            
             if (isAvailable) {
               ar.fill = 'green';
               ar.prefill = 'green';
@@ -236,6 +237,7 @@ function FloorPlanView(this: any, props: any) {
   function mainImgWasPressed(item: any) {
     if (item.fill === 'green') {
       const resource = rooms.find((r: any) => r.name === item.name);
+      console.log("Resource Id ====>" , resource );
       props.navigation.navigate('BookNow', {
         ...props.route.params,
         roomId: resource.id,
@@ -266,7 +268,6 @@ function FloorPlanView(this: any, props: any) {
       getFloorPlan();
     }
   }, [rooms]);
-  console.log("Backend===> " , BACKEND_URL);
   
   return (
     <SafeAreaView style={styles.page}>

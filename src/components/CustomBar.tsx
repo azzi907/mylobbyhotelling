@@ -161,19 +161,14 @@ const styles = StyleSheet.create({
     marginTop: 3,
   },
   img: {
-    padding: hp(0.95),
+    padding:hp(0.95),
     alignSelf:'center',
   },
   container: {
+    justifyContent:'center',
     flexDirection: 'column',
-    justifyContent: 'center',
     padding: hp(1),
     marginTop: hp(0.5),
-  },
-  imgQR: {
-    height: 15,
-    width: 15,
-    marginLeft: wp(4),
   },
 });
 export default observer(CustomTabBar);

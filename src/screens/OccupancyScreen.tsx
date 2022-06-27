@@ -21,7 +21,7 @@ import {
 import {useRootStoreContext} from '../Store';
 import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
-function Occupancy(props: any) {
+function Occupancy() {
   const {store, userStore} = useRootStoreContext();
 
   const [occupancy, setOccupancy] = React.useState<any>(null);
@@ -65,7 +65,7 @@ function Occupancy(props: any) {
   }
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(1000).then(() =>{ 
+    wait(200).then(() =>{ 
     getOccupancy();
     setRefreshing(false)
   });
@@ -77,12 +77,7 @@ function Occupancy(props: any) {
         style={[
           styles.container,
           {
-            height:
-              aspectRatio > 1.6 && aspectRatio < 1.9
-                ? hp(58)
-                : aspectRatio >= 1.9
-                ? hp(53)
-                : hp(56),
+            height:hp(97),
           },
         ]}>
         <Text
@@ -109,33 +104,33 @@ function Occupancy(props: any) {
                   {
                     height:
                       aspectRatio > 1.6 && aspectRatio < 1.9
-                        ? 140
-                        : aspectRatio >= 1.9
                         ? 175
-                        : 275,
+                        : aspectRatio >= 1.9
+                        ? 205
+                        : 320,
                   },
                 ]}>
                 <View
                   style={[
                     styles.floor,
                     {
-                      padding: aspectRatio > 1.6 ? wp(2.5) : wp(1.6),
+                      padding: aspectRatio > 1.6 ? wp(3) : wp(1.8),
                     },
                   ]}>
                   <Text
                     style={{
                       textAlign: 'center',
-                      fontSize: hp(1.6),
-                      fontWeight: '500',
+                      fontSize: hp(1.9),
+                      fontWeight: '700',
                     }}>
-                    Occupancy {data.name} {data.occupancy}%
+                    {data.name} {data.occupancy.toFixed(2)}%
                   </Text>
                 </View>
                 <View style={styles.box2}>
                   <Text
                     style={[
                       styles.headings,
-                      {fontSize: hp(2), marginTop: hp(1)},
+                      {fontSize: hp(2.5), marginTop: hp(1), fontWeight: '500'},
                     ]}>
                     {' '}
                     Availability
@@ -144,14 +139,14 @@ function Occupancy(props: any) {
                     <Image
                       style={{
                         marginTop: 3,
-                        padding: aspectRatio > 1.6 ? hp(1) : hp(1.5),
+                        padding: aspectRatio > 1.6 ? hp(1.2) : hp(1.5),
                       }}
                       source={HOT_DESK}
                     />
                     <Text
                       style={[
                         styles.headings,
-                        {fontSize: aspectRatio > 1.6 ? hp(1.4) : hp(1.7)},
+                        {fontSize: aspectRatio > 1.6 ? hp(2.1) : hp(1.7)},
                       ]}>
                       {data.desks} hot desks
                     </Text>
@@ -160,14 +155,14 @@ function Occupancy(props: any) {
                     <Image
                       style={{
                         marginTop: 3,
-                        padding: aspectRatio > 1.6 ? hp(1) : hp(1.5),
+                        padding: aspectRatio > 1.6 ? hp(1.2) : hp(1.5),
                       }}
                       source={MEET_ROOM}
                     />
                     <Text
                       style={[
                         styles.headings,
-                        {fontSize: aspectRatio > 1.6 ? hp(1.4) : hp(1.7)},
+                        {fontSize: aspectRatio > 1.6 ? hp(2.1) : hp(1.7)},
                       ]}>
                       {data.rooms} meeting rooms
                     </Text>
@@ -176,14 +171,14 @@ function Occupancy(props: any) {
                     <Image
                       style={{
                         marginTop: 3,
-                        padding: aspectRatio > 1.6 ? hp(1) : hp(1.5),
+                        padding: aspectRatio > 1.6 ? hp(1.2) : hp(1.5),
                       }}
                       source={PRI_OFF}
                     />
                     <Text
                       style={[
                         styles.headings,
-                        {fontSize: aspectRatio > 1.6 ? hp(1.4) : hp(1.7)},
+                        {fontSize: aspectRatio > 1.6 ? hp(2.1) : hp(1.7)},
                       ]}>
                       {data.offices} private offices
                     </Text>
@@ -195,7 +190,7 @@ function Occupancy(props: any) {
           })}
         </ScrollView>
       </View>
-      <View style={styles.graphContainer}>
+      {/* <View style={styles.graphContainer}>
       <View style={styles.shadow}>
         <ScrollView horizontal={true}>
           <View style={{flexDirection: 'row'}}>
@@ -238,7 +233,7 @@ function Occupancy(props: any) {
           </View>
         </ScrollView>
       </View>
-      </View>
+      </View> */}
     </SafeAreaView>
   );
 }
@@ -293,6 +288,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     textAlignVertical: 'center',
+    marginTop: hp(0.7)
   },
   points: {
     textAlign: 'center',
@@ -301,7 +297,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   graphContainer: {
-    width: wp(91),
+    width: wp(92),
     position: 'absolute',
     bottom: 0,
     height: hp(28),

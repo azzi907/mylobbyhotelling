@@ -57,8 +57,6 @@ function MyMeetings(props: any) {
     fetch(`${BACKEND_URL}/api/rooms_reservations/meetings`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        console.log("Result of Filtered Rooms====>", result.reservations);
-        
         setMeetingRooms(result.reservations);
         setFilteredRooms(result.reservations);
       })
@@ -273,7 +271,7 @@ function MyMeetings(props: any) {
             </TouchableOpacity>
           </View>
         </View>
-        <Text style={{marginTop: 10}}>Today: {userStore.auth.date}</Text>
+        <Text style={{marginTop: 10 , fontSize: hp(1.5)}}>Today: {userStore.auth.date}</Text>
         {filteredRooms != null && filteredRooms.length ? (
           <ScrollView
             style={{height: hp(75)}}
@@ -453,12 +451,12 @@ const styles = StyleSheet.create({
     fontSize: wp(5),
     fontWeight: '700',
     color: 'black',
-    paddingLeft: 8,
+    paddingLeft: wp(4),
     paddingBottom: 8,
   },
   headings: {
-    fontSize: wp(4.5),
-    paddingLeft: 8,
+    fontSize: wp(4),
+    paddingLeft: wp(4),
     fontWeight: '700',
   },
   invitees: {
@@ -492,7 +490,6 @@ const styles = StyleSheet.create({
   tableDataHeadings: {
     fontSize: wp(2.2),
     textAlign: 'center',
-    padding: hp(0.5),
   },
   cancleMeeting: {
     marginLeft: wp(2.5),

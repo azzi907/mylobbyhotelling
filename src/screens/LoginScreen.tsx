@@ -81,18 +81,19 @@ const LoginScreen = (props: any) => {
       .catch(error => {console.log('error  ==>', error)
       if (Platform.OS === 'android') {
         ToastAndroid.show(
-          "Invalid credentials, Please try again or sing-up for new account",
+          "Invalid credentials, Please try again or sign-up for new account",
           ToastAndroid.LONG,
         );
       } else {
-        Alert.alert("Invalid credentials , please try again or sing-up for new account");
+        Alert.alert("Invalid credentials , please try again or sign-up for new account");
       }}
       );
   };
+  console.log("BackendUrl ===>" , BACKEND_URL);
+  
   return (
     <View style={styles.page}>
       <View
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           alignItems: 'center',
         }}>
