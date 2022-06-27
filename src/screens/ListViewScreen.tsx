@@ -55,15 +55,18 @@ function ListView(props: any) {
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        
         setRooms(result.rooms);
-        if (userStore.auth.employee.category === 'C') {
+        if (userStore.auth.employee.category === 'C' || userStore.auth.employee.category === undefined || userStore.auth.employee.category === null) {
           setFilteredRooms(result.rooms);
         } else {
           const newCheckRooms: any = [];
           result.rooms?.forEach((room: any) => {
-            const isAvailble =
+            const isAvailable =
               room.category === userStore.auth.employee.category;
-            if (isAvailble) {
+              console.log(room.category , "===" , userStore.auth.employee.category);
+
+            if (isAvailable) {
               newCheckRooms.push(room);
             }
           });
@@ -152,7 +155,7 @@ function ListView(props: any) {
           showsVerticalScrollIndicator={false}>
           {filteredRooms?.map((roomData: any) => {
             return (
-              <View style={styles.boxShadow}>
+              <View style={styles.boxShadow} key={roomData.id}>
                 <View
                   style={[
                     styles.box,
