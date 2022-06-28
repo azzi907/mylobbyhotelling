@@ -80,7 +80,6 @@ function FloorPlanView(this: any, props: any) {
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
-      console.log("FloorPlan data ===> " , fp);
       
       fp[0].areaRN?.forEach((ar: any) => {
         if (userStore.auth.employee.category !== 'C' || userStore.auth.employee.category !== '' || userStore.auth.employee.category !== undefined ) {
@@ -91,7 +90,6 @@ function FloorPlanView(this: any, props: any) {
               room.isBlocked === false &&
               (room.category === userStore.auth.employee.category || room.category === "A"),
           );
-          console.log("Available ====> " , isAvailable);
           const blocked = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
@@ -142,7 +140,6 @@ function FloorPlanView(this: any, props: any) {
           }
         }
       });
-      console.log("Check Floor Plan ===> " ,JSON.stringify(fp[0].areaRN) );
       
       setArea(fp[0].areaRN);
       setFloorPlan(fp[0]);
@@ -237,7 +234,6 @@ function FloorPlanView(this: any, props: any) {
   function mainImgWasPressed(item: any) {
     if (item.fill === 'green') {
       const resource = rooms.find((r: any) => r.name === item.name);
-      console.log("Resource Id ====>" , resource );
       props.navigation.navigate('BookNow', {
         ...props.route.params,
         roomId: resource.id,

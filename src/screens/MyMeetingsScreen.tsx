@@ -202,18 +202,17 @@ function MyMeetings(props: any) {
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
-        <View style={{flexDirection: 'row', marginTop: 15}}>
+        <View style={{flexDirection: 'row', marginTop: 15, justifyContent:'flex-start'}}>
           <TouchableOpacity
-            style={{display: 'flex', flexDirection: 'row'}}
+            style={{display: 'flex', flexDirection: 'row' , justifyContent:'center'}}
             onPress={() => {
               props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
+            <Image style={{marginTop: 2, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
             <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
           </TouchableOpacity>
         </View>
-
-        <Text
+          <Text
           style={{alignSelf: 'center', fontWeight: '700', fontSize: hp(3.75)}}>
           My Meetings
         </Text>
@@ -282,7 +281,7 @@ function MyMeetings(props: any) {
                 onRefresh={onRefresh}
               />
             }>
-            {filteredRooms?.map((data: any) => {
+            {filteredRooms?.reverse().map((data: any) => {
               return (
                 <View style={[styles.box, styles.shadowProp]} key={data.id}>
                   <TouchableOpacity

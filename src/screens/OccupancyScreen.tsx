@@ -7,7 +7,6 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   SafeAreaView,
   ScrollView,
   ToastAndroid,
@@ -19,7 +18,6 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {useRootStoreContext} from '../Store';
-import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
 function Occupancy() {
   const {store, userStore} = useRootStoreContext();
