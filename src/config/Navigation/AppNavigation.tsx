@@ -71,6 +71,8 @@ function MainNavigator() {
       <Stack.Screen name="QrReservationNotFound" component={QrReservationNotFound} />
       <Stack.Screen name="QrBookingNotAvailable" component={QrBookingNotAvailable} />
       <Stack.Screen name="OccupancyScreen" component={OccupancyScreen} />
+      <Stack.Screen name="QrScreen" component={QrScreen} />
+      
     </Stack.Navigator>
   );
 }
