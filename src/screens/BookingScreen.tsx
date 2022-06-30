@@ -16,6 +16,7 @@ import {useRootStoreContext} from '../Store';
 import {Button, Modal, Portal, TextInput} from 'react-native-paper';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import RNCalendarEvents from 'react-native-calendar-events';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {observer} from 'mobx-react';
 import {
   widthPercentageToDP as wp,
@@ -146,6 +147,11 @@ function BookingScreen(props: any) {
 
   return (
     <SafeAreaView style={styles.page}>
+      <View style={{flexDirection:'row' , justifyContent:'flex-end' , width:wp(95) , marginTop: 10}}>
+        <TouchableOpacity onPress={()=> props.navigation.navigate('Settings')}>
+       <Icon name="cog" size={aspectRatio < 1.6 ? 45 : 20} color="#000000" />
+        </TouchableOpacity>
+      </View>
       <Text style={styles.welcome}>Hi, {userStore.auth.employee.name}</Text>
       <Portal>
         <Modal
