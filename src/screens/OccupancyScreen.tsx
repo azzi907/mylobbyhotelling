@@ -113,16 +113,26 @@ function Occupancy() {
                     styles.floor,
                     {
                       padding: aspectRatio > 1.6 ? wp(3) : wp(1.8),
+                      flexDirection:'row',
+                      justifyContent:'space-around',
                     },
                   ]}>
                   <Text
+                  numberOfLines={1}
+                  ellipsizeMode='tail'
                     style={{
                       textAlign: 'center',
                       fontSize: hp(1.9),
                       fontWeight: '700',
+                      width:wp(38)
                     }}>
-                    {data.name} {data.occupancy.toFixed(2)}%
+                    {data.name} 
                   </Text>
+                  <Text style={{
+                      textAlign: 'center',
+                      fontSize: hp(1.9),
+                      fontWeight: '700',
+                    }}>{data.occupancy.toFixed(2)}%</Text>
                 </View>
                 <View style={styles.box2}>
                   <Text

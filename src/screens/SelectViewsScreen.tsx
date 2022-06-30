@@ -19,6 +19,7 @@ export default function SelectViews(props: any) {
   const LOC_IMG = require('../../images/floor-plan-view.png');
   const {height, width} = Dimensions.get('window');
   const aspectRatio = height / width;
+  
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>

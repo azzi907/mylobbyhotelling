@@ -6,10 +6,13 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  ToastAndroid,
+  Platform,
+  Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {useRootStoreContext} from '../Store';
-import {Button } from 'react-native-paper';
+import {Button} from 'react-native-paper';
 import * as AddCalendarEvent from 'react-native-add-calendar-event';
 import RNCalendarEvents from 'react-native-calendar-events';
 import {observer} from 'mobx-react';
@@ -20,9 +23,47 @@ import {
 
 function QrReservation(props: any) {
   const {store, userStore} = useRootStoreContext();
-  const BACKEND_URL = store.parameters.backendUrl; 
+  const BACKEND_URL = store.parameters.backendUrl;
+  const [rooms, setRooms] = useState<any>(null);
 
-  async function bookNow() {
+  async function bookNow(reservation: any, calendarItemIdentifier: any) {
+    const invitees = reservation?.attendees?.slice(1);
+    props.navigation.navigate('BookNow', {
+      startDate: reservation?.startDate,
+      endDate: reservation?.endDate,
+      title: reservation?.title,
+      location: reservation?.location,
+      notes: reservation?.description,
+      invitees: invitees,
+      bookingType: props.route.params.bookingType,
+      isRoom: props.route.params.QrData.isRoom
+        ? true
+        : false,
+      isOffice: props.route.params.QrData.isOffice
+        ? true
+        : false,
+      isDesk: props.route.params.QrData.isDesk
+        ? true
+        : false,
+      meetingId: calendarItemIdentifier,
+      isQrScanned: true,
+      roomId: props.route.params.QrData.roomId
+        ? JSON.parse(props.route.params.QrData.roomId)
+        : props.route.params.QrData.OfficeId
+        ? JSON.parse(props.route.params.QrData.OfficeId)
+        : JSON.parse(props.route.params.QrData.deskId),
+      roomName: props.route.params.QrData.roomName
+        ? props.route.params.QrData.roomName
+        : props.route.params.QrData.officeName
+        ? props.route.params.QrData.officeName
+        : props.route.params.QrData.deskName,
+    });
+  }
+  const getRooms = async () => {
+    let check = false;
+    const isOffice = props.route.params.QrData.isOffice ? true : false;
+    const isRoom = props.route.params.QrData.isRoom ? true : false;
+    const isDesk = props.route.params.QrData.isDesk ? true : false;
     const eventConfig: AddCalendarEvent.CreateOptions = {
       title: '',
       location: '',
@@ -37,40 +78,59 @@ function QrReservation(props: any) {
       const reservation = await RNCalendarEvents.findEventById(
         calendarItemIdentifier,
       );
-      const invitees = reservation?.attendees?.slice(1);
-
-      props.navigation.navigate('BookNow', {
-        startDate: reservation?.startDate,
-        endDate: reservation?.endDate,
-        title: reservation?.title,
-        location: reservation?.location,
-        notes: reservation?.description,
-        invitees: invitees,
-        bookingType: props.route.params.bookingType,
-        isRoom: props.route.params.QrData.isRoom
-          ? props.route.params.QrData.isRoom
-          : false,
-        isOffice: props.route.params.QrData.isOffice
-          ? props.route.params.QrData.isOffice
-          : false,
-        isDesk: props.route.params.QrData.isDesk
-          ? props.route.params.QrData.isDesk
-          : false,
-        meetingId: calendarItemIdentifier,
-        isQrScanned: true,
-        roomId: props.route.params.QrData.roomId
-          ? props.route.params.QrData.roomId
-          : props.route.params.QrData.OfficeId
-          ? props.route.params.QrData.OfficeId
-          : props.route.params.QrData.deskId,
-        roomName: props.route.params.QrData.roomName
-          ? props.route.params.QrData.roomName
-          : props.route.params.QrData.officeName
-          ? props.route.params.QrData.officeName
-          : props.route.params.QrData.deskName,
-      });
+      const date1 = new Date(
+        reservation?.startDate ? reservation.startDate : '',
+      ).getTime();
+      const date2 = new Date(
+        reservation?.endDate ? reservation.endDate : '',
+      ).getTime();
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accountId: userStore.auth.employee.accountId,
+          dateFrom: date1,
+          dateTo: date2,
+          isRoom: isRoom,
+          isOffice: isOffice,
+          isDesk: isDesk,
+        }),
+      };
+      fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
+        .then(response => response.json())
+        .then(async result => {
+          setRooms(result.rooms);
+          result.rooms.forEach((r: any) => {
+            if (r.id === JSON.parse(props.route.params.QrData.deskId)) {
+              check = true;
+            }
+          });
+          if (check) {
+            bookNow(reservation, calendarItemIdentifier);
+          } else {
+           await RNCalendarEvents.removeEvent(
+              calendarItemIdentifier,
+            );
+            if (Platform.OS === 'android') {
+              ToastAndroid.show(
+                'Already Booked for Selected time Slot',
+                ToastAndroid.LONG,
+              );
+            } else {
+              Alert.alert('Already Booked for Selected time Slot');
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          ToastAndroid.show('Error saving ical', ToastAndroid.LONG);
+        });
     }
-  }
+  };
+
   return (
     <SafeAreaView style={styles.page}>
       <Text style={styles.welcome}>Hi, {userStore.auth.employee.name}</Text>
@@ -85,9 +145,18 @@ function QrReservation(props: any) {
         <Text style={{fontWeight: 'bold'}}>
           {userStore.auth.sites[0]?.name}
         </Text>{' '}
-        Room Booking
+        {`${
+          props.route.params.bookingType === 'Booked Meeting Desk'
+            ? 'Desk Booking'
+            : props.route.params.bookingType === 'Booked Meeting Room'
+            ? 'Room Booking'
+            : props.route.params.bookingType === 'Booked Meeting Office'
+            ? 'Office Booking'
+            : ''
+        }`}
       </Text>
       <Image
+        resizeMode="contain"
         source={{
           uri: `${BACKEND_URL}/api/sites/getLogo/${userStore.auth.sites[0]?.id}?small=true`,
         }}
@@ -100,14 +169,15 @@ function QrReservation(props: any) {
         style={{borderRadius: 20, marginTop: 15}}
         mode="contained"
         onPress={() => {
-          bookNow();
+          getRooms();
+          //bookNow();
         }}>
         {`Reserve This ${
           props.route.params.bookingType === 'Booked Meeting Desk'
             ? 'Desk'
-            : 'Booked Meeting Room'
+            : props.route.params.bookingType === 'Booked Meeting Room'
             ? 'Room'
-            : 'Booked Meeting Office'
+            : props.route.params.bookingType === 'Booked Meeting Office'
             ? 'Office'
             : ''
         }`}
@@ -117,7 +187,11 @@ function QrReservation(props: any) {
         labelStyle={styles.buttonText}
         style={{borderRadius: 20, marginTop: 15}}
         mode="contained"
-        onPress={() => props.navigation.navigate('QrExistingReservation', {...props.route.params})}>
+        onPress={() =>
+          props.navigation.navigate('QrExistingReservation', {
+            ...props.route.params,
+          })
+        }>
         Sign In
       </Button>
     </SafeAreaView>

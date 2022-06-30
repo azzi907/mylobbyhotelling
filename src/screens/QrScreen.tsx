@@ -4,10 +4,11 @@ import {StyleSheet, Text, Platform, ToastAndroid, Alert} from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {observer} from 'mobx-react-lite';
-import * as AddCalendarEvent from 'react-native-add-calendar-event';
-import RNCalendarEvents from 'react-native-calendar-events';
+import {useRootStoreContext} from '../Store';
 
 function QrScreen(props: any) {
+  const {store, userStore} = useRootStoreContext();
+
   const onSuccess = async (e: any) => {
     if (e.data) {
       var resultt: any = {};
@@ -16,29 +17,78 @@ function QrScreen(props: any) {
         var subValues: any = parts[i].split(':');
         resultt[subValues[0]] = subValues[1].substring(0, subValues[1].length);
       }
-      if (resultt.isDesk === true && resultt.isBlocked === true) {
-        if (Platform.OS === 'android') {
-          ToastAndroid.show(
-            'This desk is Blocked due to Social Distancing',
-            ToastAndroid.LONG,
-          );
+      if (userStore.auth.employee.category === 'C') {
+        if (resultt.isDesk === true && resultt.isBlocked === true) {
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(
+              'This desk is Blocked due to Social Distancing',
+              ToastAndroid.LONG,
+            );
+          } else {
+            Alert.alert('This desk is Blocked due to Social Distancing');
+          }
         } else {
-          Alert.alert('This desk is Blocked due to Social Distancing');
+          setTimeout(() => {
+            const bookingType =
+              resultt.isDesk === true
+                ? 'Booked Meeting Desk'
+                : resultt.isRoom === true
+                ? 'Booked Meeting Room'
+                : 'Booked Meeting Office';
+            props.navigation.navigate('QrReservation', {
+              QrData: resultt,
+              bookingType: bookingType,
+            });
+          }, 1000);
+        }
+      } else if (userStore.auth.employee.category === 'A') {
+        if (userStore.auth.employee.category === resultt.category) {
+          setTimeout(() => {
+            const bookingType =
+              resultt.isDesk === true
+                ? 'Booked Meeting Desk'
+                : resultt.isRoom === true
+                ? 'Booked Meeting Room'
+                : 'Booked Meeting Office';
+            props.navigation.navigate('QrReservation', {
+              QrData: resultt,
+              bookingType: bookingType,
+            });
+          }, 1000);
+        } else {
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(
+              'Only Available for Executives ',
+              ToastAndroid.LONG,
+            );
+          } else {
+            Alert.alert('Only Available for Executives ');
+          }
         }
       } else {
-        const bookingType =
-        resultt.isDesk === true
-          ? 'Booked Meeting Desk'
-          : resultt.isRoom === true
-          ? 'Booked Meeting Room'
-          : 'Booked Meeting Office';
-
-        props.navigation.navigate('QrReservation' , {
-          QrData : resultt,
-          bookingType: bookingType, 
-        });
-       
-        
+        if (resultt.category === 'B' || resultt.category === 'A') {
+          setTimeout(() => {
+            const bookingType =
+              resultt.isDesk === true
+                ? 'Booked Meeting Desk'
+                : resultt.isRoom === true
+                ? 'Booked Meeting Room'
+                : 'Booked Meeting Office';
+            props.navigation.navigate('QrReservation', {
+              QrData: resultt,
+              bookingType: bookingType,
+            });
+          }, 1000);
+        } else {
+          if (Platform.OS === 'android') {
+            ToastAndroid.show(
+              'Only Available for Executives ',
+              ToastAndroid.LONG,
+            );
+          } else {
+            Alert.alert('Only Available for Executives ');
+          }
+        }
       }
     }
   };
