@@ -12,6 +12,7 @@ import {
   ScrollView,
   ToastAndroid,
   Dimensions,
+  Platform,
 } from 'react-native';
 const {height, width} = Dimensions.get('window');
 const aspectRatio = height / width;
@@ -55,17 +56,18 @@ function ListView(props: any) {
     fetch(`${BACKEND_URL}/api/rooms/availableList`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        
         setRooms(result.rooms);
-        if (userStore.auth.employee.category === 'C' || userStore.auth.employee.category === undefined || userStore.auth.employee.category === null) {
+        if (
+          userStore.auth.employee.category === 'C' ||
+          userStore.auth.employee.category === undefined ||
+          userStore.auth.employee.category === null
+        ) {
           setFilteredRooms(result.rooms);
         } else {
           const newCheckRooms: any = [];
           result.rooms?.forEach((room: any) => {
             const isAvailable =
               room.category === userStore.auth.employee.category;
-              console.log(room.category , "===" , userStore.auth.employee.category);
-
             if (isAvailable) {
               newCheckRooms.push(room);
             }
@@ -150,67 +152,88 @@ function ListView(props: any) {
             fontSize: hp(5),
           }}
         />
-        <ScrollView
-          style={{height: '80%'}}
-          showsVerticalScrollIndicator={false}>
-          {filteredRooms?.map((roomData: any) => {
-            return (
-              <View style={styles.boxShadow} key={roomData.id}>
+        {
+          <ScrollView
+            style={{height: '80%'}}
+            showsVerticalScrollIndicator={false}>
+            {filteredRooms?.map((roomData: any) => {
+              return (
                 <View
-                  style={[
-                    styles.box,
-                    {height: aspectRatio > 1.6 ? hp(21) : hp(24)},
-                  ]}
+                  style={
+                    Platform.OS === 'ios'
+                      ? styles.boxShadow
+                      : styles.boxShadowAndroid
+                  }
                   key={roomData.id}>
                   <View
                     style={[
-                      styles.box2,
-                      {height: aspectRatio > 1.6 ? hp(16.5) : hp(20)},
-                    ]}>
-                    <Image
-                      style={[styles.menuimg, {width: wp(30), height: aspectRatio > 1.6 ?  hp(13) : hp(16)}]}
-                      source={{
-                        uri: `${BACKEND_URL}/api/rooms/getAvatar/${roomData.id}?small=true`,
-                      }}
-                    />
-                    <View style={{padding: 15}}>
-                      <Text
-                        style={{
-                          marginLeft: wp(2),
-                          fontSize: wp(5),
-                          fontWeight: '700',
-                        }}>
-                        {roomData.name}
-                      </Text>
-                      <Text style={styles.headings}>{roomData.location}</Text>
-                      <Text style={styles.headings}>
-                        Category:{' '}
-                        {roomData.category === 'A' ? 'Regular' : 'Executive'}
-                      </Text>
-                      <Text style={styles.headings}>
-                        Capacity: {roomData.capacity}
-                      </Text>
-                      <Text style={styles.headings}>
-                        AV: {roomData.description}
-                      </Text>
+                      styles.box,
+                      {height: aspectRatio > 1.6 ? hp(21) : hp(24)},
+                    ]}
+                    key={roomData.id}>
+                    <View
+                      style={[
+                        styles.box2,
+                        {height: aspectRatio > 1.6 ? hp(16.5) : hp(20)},
+                      ]}>
+                      <Image
+                        style={[
+                          styles.menuimg,
+                          {
+                            width: wp(30),
+                            height: aspectRatio > 1.6 ? hp(13) : hp(16),
+                          },
+                        ]}
+                        source={{
+                          uri: `${BACKEND_URL}/api/rooms/getAvatar/${roomData.id}?small=true`,
+                        }}
+                      />
+                      <View style={{padding: 15}}>
+                        <View style={{width:wp(54)}}>
+                          <Text
+                            numberOfLines={1}
+                            ellipsizeMode='tail'
+                            style={{
+                              marginLeft: wp(2),
+                              fontSize: wp(5),
+                              fontWeight: '700',
+                            }}>
+                            {roomData.name}
+                          </Text>
+                        </View>
+
+                        <Text style={styles.headings}>{roomData.location}</Text>
+                        <Text style={styles.headings}>
+                          Category:{' '}
+                          {roomData.category === 'A' ? 'Regular' : 'Executive'}
+                        </Text>
+                        <Text style={styles.headings}>
+                          Capacity: {roomData.capacity}
+                        </Text>
+                        <Text style={styles.headings}>
+                          AV: {roomData.description}
+                        </Text>
+                      </View>
                     </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        props.navigation.navigate('BookNow', {
+                          roomName: roomData.name,
+                          roomId: roomData.id,
+                          floorName: roomData.location,
+                          ...props.route.params,
+                        });
+                      }}>
+                      <View style={styles.bookNow}>
+                        <Text style={styles.bookNowText}>Book Now</Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                <TouchableOpacity
-                  onPress={() => {
-                    props.navigation.navigate('BookNow', {
-                      roomName: roomData.name,
-                      roomId: roomData.id,
-                      floorName: roomData.location,
-                      ...props.route.params,
-                    });
-                  }}>
-                  <Text style={styles.bookNow}>Book Now</Text>
-                </TouchableOpacity>
-              </View>
-          </View>
-            );
-          })}
-        </ScrollView>
+                </View>
+              );
+            })}
+          </ScrollView>
+        }
       </View>
     </SafeAreaView>
   );
@@ -252,7 +275,7 @@ const styles = StyleSheet.create({
   menuimg: {
     marginLeft: wp(3),
     marginTop: hp(2),
-    borderRadius: wp(4)
+    borderRadius: wp(4),
   },
   listView: {
     textDecorationLine: 'underline',
@@ -263,12 +286,14 @@ const styles = StyleSheet.create({
   bookNow: {
     height: hp(50),
     backgroundColor: '#51D1FA',
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  bookNowText: {
     textAlign: 'center',
     fontSize: hp(3),
     textAlignVertical: 'center',
     color: 'white',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
   },
   headings: {
     marginLeft: wp(3.5),
@@ -276,15 +301,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   boxShadow: {
-    borderRadius: 10,
+    borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 1,
-      height: 4,
+      height: 3,
     },
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
-    elevation: 9,
+    elevation: 1,
+  },
+  boxShadowAndroid: {
+    elevation: 0,
   },
 });
 export default observer(ListView);

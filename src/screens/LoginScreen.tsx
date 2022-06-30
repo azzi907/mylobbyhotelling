@@ -46,7 +46,6 @@ const LoginScreen = (props: any) => {
       body: raw,
       redirect: 'follow',
     };
-    console.log("url==>" , BACKEND_URL);
     fetch(`${BACKEND_URL}/api/employees/login?siteId=${siteId}`, requestOptions)
       .then(response => response.json())
       .then((result: any) => {
@@ -89,7 +88,6 @@ const LoginScreen = (props: any) => {
       }}
       );
   };
-  console.log("BackendUrl ===>" , BACKEND_URL);
   
   return (
     <View style={styles.page}>
