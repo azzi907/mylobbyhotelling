@@ -19,18 +19,17 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 function BookNow(props: any) {
-  const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const {store, userStore} = useRootStoreContext();
   const BACKEND_URL = store.parameters.backendUrl;
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
-    if (name === '' || code === '') {
+    if (code === '') {
       return;
     }
     setIsDisabled(false);
-  }, [name, code]);
+  }, [code]);
 
   const handleSignIn = () => {
     const requestOptions = {
@@ -40,8 +39,7 @@ function BookNow(props: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: name,
-        code: code,
+        code: `EV ${code}`,
       }),
     };
     fetch(
@@ -89,7 +87,7 @@ function BookNow(props: any) {
       });
   };
   useEffect(() => {
-    if (code.length === 10) {
+    if (code.length === 6) {
       Keyboard.dismiss();
     }
   }, [code]);
@@ -101,32 +99,23 @@ function BookNow(props: any) {
       <SafeAreaView style={styles.page}>
         <View style={styles.conatiner}>
           <Text style={styles.text}>
-            Enter Your Name and EV code of your Reservation
+            Enter EV code of your Reservation
           </Text>
         </View>
         <View style={styles.inputField}>
           <TextInput
-            mode="outlined"
-            label="Name"
-            value={name}
-            selectionColor={'black'}
-            keyboardType={'email-address'}
-            outlineColor={'blue'}
-            right={<TextInput.Icon name="mail" color={'#03A9F4'} />}
-            onChangeText={text => setName(text)}
-          />
-        </View>
-        <View style={styles.inputField}>
-          <TextInput
+            
             mode="outlined"
             label="Ev Code"
             value={code}
             selectionColor={'black'}
-            keyboardType={'email-address'}
+            keyboardType={'numeric'}
             outlineColor={'blue'}
             right={<TextInput.Icon name="mail" color={'#03A9F4'} />}
-            maxLength={10}
-            onChangeText={text => setCode(text)}
+            maxLength={6}
+            onChangeText={text => {
+              const code = text.replace(/[^0-9]/g, '')
+              setCode(code)}}
           />
         </View>
         <View style={styles.buttonContainer}>

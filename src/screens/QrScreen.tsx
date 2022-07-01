@@ -95,7 +95,7 @@ function QrScreen(props: any) {
   return (
     <QRCodeScanner
       reactivate={true}
-      reactivateTimeout={5000}
+      reactivateTimeout={10000}
       onRead={onSuccess}
       topContent={<Text style={styles.centerText}>Scan Your QR CODE</Text>}
     />

@@ -77,8 +77,6 @@ function FloorPlanView(this: any, props: any) {
 
   React.useEffect(() => {
     if (selectedFloorPlan) {
-      console.log("Floor Plan", JSON.stringify(floorPlanAll));
-      
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
@@ -98,25 +96,19 @@ function FloorPlanView(this: any, props: any) {
               (room.category === userStore.auth.employee.category ||
                 room.category === 'A'),
           );
-                console.log("Is Available ==>" , isAvailable);
-                
           const blocked = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
               room.name === ar.name &&
               room.isBlocked === true,
           );
-          console.log("Is blocked ==>" , blocked);
-
-          const category = rooms.find(
+           const category = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
               room.name === ar.name &&
               (room.category === userStore.auth.employee.category ||
                 room.category === 'A'),
           );
-          console.log("Is category ==>" , category);
-
           if (isAvailable) {
             ar.fill = 'green';
             ar.prefill = 'green';
