@@ -144,13 +144,12 @@ function BookingScreen(props: any) {
       console.log(error);
     }
   }
-
   return (
     <SafeAreaView style={styles.page}>
       <View style={{flexDirection:'row' , justifyContent:'flex-end' , width:wp(95) , marginTop: 10}}>
-        {/* <TouchableOpacity onPress={()=> props.navigation.navigate('Settings')}>
+        <TouchableOpacity onPress={()=> props.navigation.navigate('Settings')}>
        <Icon name="cog" size={aspectRatio < 1.6 ? 45 : 20} color="#000000" />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
       <Text style={styles.welcome}>Hi, {userStore.auth.employee.name}</Text>
       <Portal>
