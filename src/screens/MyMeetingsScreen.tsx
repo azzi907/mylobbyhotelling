@@ -52,6 +52,7 @@ function MyMeetings(props: any) {
       },
       body: JSON.stringify({
         employeeId: userStore.auth.employee.id,
+        todayDate: new Date().getTime(),
       }),
     };
     fetch(`${BACKEND_URL}/api/rooms_reservations/meetings`, requestOptions)
