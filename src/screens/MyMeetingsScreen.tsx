@@ -42,9 +42,7 @@ function MyMeetings(props: any) {
   const [filteredRooms, setFilteredRooms] = useState<any>([]);
   const BACKEND_URL = store.parameters.backendUrl;
   const isFocused = useIsFocused();
-  console.log('====================================');
-  console.log('backend url =>', BACKEND_URL);
-  console.log('====================================');
+
   const getMeetings = async () => {
     const requestOptions = {
       method: 'POST',
