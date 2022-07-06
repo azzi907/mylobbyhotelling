@@ -1,6 +1,6 @@
 import {makeAutoObservable} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MobXRootStore from '.';
+import {MobXRootStore} from '.';
 import {makePersistable} from 'mobx-persist-store';
 
 interface Parameter {

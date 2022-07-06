@@ -23,6 +23,7 @@ import QrReservationNotFound from '../../screens/QrReservationNotFoundScreen';
 import QrBookingNotAvailable from '../../screens/QrBookingNotAvailable';
 import OccupancyScreen from '../../screens/OccupancyScreen';
 import Settings from '../../screens/SettingsScreen'
+import PrivacyPolicy from '../../screens/PrivacyPolicy';
 
 type StackParamList = {
   Init: undefined;
@@ -47,6 +48,7 @@ type StackParamList = {
   QrBookingNotAvailable : undefined;
   OccupancyScreen : undefined;
   Settings : undefined;
+  PrivacyPolicy: undefined;
 };
 
 const Stack = createNativeStackNavigator<StackParamList>();
@@ -75,7 +77,7 @@ function MainNavigator() {
       <Stack.Screen name="OccupancyScreen" component={OccupancyScreen} />
       <Stack.Screen name="QrScreen" component={QrScreen} />
       <Stack.Screen name="Settings" component={Settings} />
-      
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
 
     </Stack.Navigator>
   );
