@@ -180,8 +180,10 @@ function FindAColleague(this: any, props: any) {
       if (reservations) {
         const newDate = new Date(dateFilter).setUTCSeconds(0);
         const filteredData = reservations.filter((element: any) => {
-          const dateCheck = new Date(element.bookedTimeIn).setUTCSeconds(0);
-          if (newDate === dateCheck) {
+          const dateCheckFrom = new Date(element.bookedTimeIn).setUTCSeconds(0);
+          const dateCheckTo = new Date(element.bookedTimeOut).setUTCSeconds(0);
+
+          if (newDate >= dateCheckFrom && newDate <= dateCheckTo) {
             return element;
           }
         });

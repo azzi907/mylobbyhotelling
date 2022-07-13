@@ -32,6 +32,8 @@ function FloorPlanView(this: any, props: any) {
   const RECT_GREEN = require('../../images/rectangle-green.png');
   const CIRC_RED = require('../../images/circle-red.png');
   const CIRC_GREEN = require('../../images/circle-green.png');
+  const SQ_RED = require('../../images/square-red.png');
+  const SQ_GREEN = require('../../images/square-green.png');
   const SOCIAL_DIST = require('../../images/socialDistancingIcon.png');
   const {height, width} = Dimensions.get('window');
   const aspectRatio = height / width;
@@ -75,20 +77,24 @@ function FloorPlanView(this: any, props: any) {
 
   React.useEffect(() => {
     if (selectedFloorPlan) {
-      console.log("Selected Floor Plan" , selectedFloorPlan);
-      
       const fp: any = floorPlanAll.filter(
         (fpc: any) => fpc.name === selectedFloorPlan,
       );
-      
+
       fp[0].areaRN?.forEach((ar: any) => {
-        if (userStore.auth.employee.category !== 'C' || userStore.auth.employee.category !== '' || userStore.auth.employee.category !== undefined ) {
+
+        if (
+          userStore.auth.employee.category !== 'C' ||
+          userStore.auth.employee.category !== '' ||
+          userStore.auth.employee.category !== undefined
+        ) {
           const isAvailable = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
               room.name === ar.name &&
               room.isBlocked === false &&
-              (room.category === userStore.auth.employee.category || room.category === "A"),
+              (room.category === userStore.auth.employee.category ||
+                room.category === 'A'),
           );
           const blocked = rooms.find(
             (room: any) =>
@@ -96,11 +102,12 @@ function FloorPlanView(this: any, props: any) {
               room.name === ar.name &&
               room.isBlocked === true,
           );
-          const category = rooms.find(
+           const category = rooms.find(
             (room: any) =>
               room.location === fp[0].name &&
               room.name === ar.name &&
-              (room.category === userStore.auth.employee.category || room.category === "A"),
+              (room.category === userStore.auth.employee.category ||
+                room.category === 'A'),
           );
           if (isAvailable) {
             ar.fill = 'green';
@@ -140,7 +147,7 @@ function FloorPlanView(this: any, props: any) {
           }
         }
       });
-      
+
       setArea(fp[0].areaRN);
       setFloorPlan(fp[0]);
     }
@@ -159,13 +166,18 @@ function FloorPlanView(this: any, props: any) {
         const floorPlan = result.floorPlans;
         setFloorPlanAll(floorPlan);
         floorPlan[0].areaRN.forEach((ar: any) => {
-          if (userStore.auth.employee.category !== 'C'  || userStore.auth.employee.category !== '' || userStore.auth.employee.category !== undefined) {
+          if (
+            userStore.auth.employee.category !== 'C' ||
+            userStore.auth.employee.category !== '' ||
+            userStore.auth.employee.category !== undefined
+          ) {
             const isAvailable = rooms.find(
               (room: any) =>
                 room.location === floorPlan[0].name &&
                 room.name === ar.name &&
                 room.isBlocked === false &&
-                (room.category === userStore.auth.employee.category || room.category === "A"),
+                (room.category === userStore.auth.employee.category ||
+                  room.category === 'A'),
             );
             const blocked = rooms.find(
               (room: any) =>
@@ -249,8 +261,7 @@ function FloorPlanView(this: any, props: any) {
       } else {
         Alert.alert('Not Available Due to Social Distancing');
       }
-    }
-    else {
+    } else {
       if (Platform.OS === 'android') {
         ToastAndroid.show('Already Booked', ToastAndroid.LONG);
       } else {
@@ -264,20 +275,26 @@ function FloorPlanView(this: any, props: any) {
       getFloorPlan();
     }
   }, [rooms]);
-  
+
   return (
     <SafeAreaView style={styles.page}>
       <View style={styles.container}>
         <View style={{display: 'flex', flexDirection: 'row', marginTop: 15}}>
-        <TouchableOpacity
+          <TouchableOpacity
             style={{display: 'flex', flexDirection: 'row'}}
             onPress={() => {
               props.navigation.navigate('Booking', {...props.route.params});
             }}>
-            <Image style={{marginTop: 3, height:hp(1.5), width:wp(2.5)}} source={BACK_ICON} />
-            <Text style={{color: '#51D1FA', marginLeft: 4 , fontSize:hp(1.7)}}>Back</Text>
+            <Image
+              style={{marginTop: 3, height: hp(1.5), width: wp(2.5)}}
+              source={BACK_ICON}
+            />
+            <Text style={{color: '#51D1FA', marginLeft: 4, fontSize: hp(1.7)}}>
+              Back
+            </Text>
           </TouchableOpacity>
-          <Text style={{marginLeft: wp(5), fontWeight: '500', fontSize:hp(1.5)}}>
+          <Text
+            style={{marginLeft: wp(5), fontWeight: '500', fontSize: hp(1.5)}}>
             Search results
           </Text>
         </View>
@@ -310,9 +327,9 @@ function FloorPlanView(this: any, props: any) {
             setValue={() => {}}
             onSelectItem={t => setSelectedFloorPlan(t.value)}
             placeholder="Select Floor Plan"
-            style={{height:hp(6) , borderRadius:wp(2)}}
+            style={{height: hp(6), borderRadius: wp(2)}}
             textStyle={{
-              fontSize: hp(2)
+              fontSize: hp(2),
             }}
           />
         </View>
@@ -336,9 +353,15 @@ function FloorPlanView(this: any, props: any) {
           ) : null}
         </View>
       </View>
-      <View style={styles.box}>
+      <View
+        style={[styles.box, {height: aspectRatio < 1.6 ? hp(15) : hp(11.5)}]}>
         <Text
-          style={{alignSelf: 'center', fontWeight: '600', marginTop: hp(0.5) , fontSize: hp(2)}}>
+          style={{
+            alignSelf: 'center',
+            fontWeight: '700',
+            marginTop: hp(0.4),
+            fontSize: aspectRatio < 1.6 ? hp(2.5) : hp(1.5),
+          }}>
           Legend
         </Text>
         <View
@@ -346,18 +369,60 @@ function FloorPlanView(this: any, props: any) {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-around',
-            marginTop: hp(1),
+            marginTop: hp(0.6),
           }}>
-          <View style={styles.legendDescription}>
-            <Image resizeMode='contain' style={{marginTop:aspectRatio > 1.6 ? hp(0.1) : hp(0.55) ,width: wp(3.5), height:hp(2)}} source={CIRC_GREEN} />
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{
+                marginTop: aspectRatio > 1.6 ? hp(0.1) : hp(0.55),
+                width: wp(3.5),
+                height: hp(2),
+              }}
+              source={CIRC_GREEN}
+            />
             <Text style={styles.text}>Desk is avaiable</Text>
           </View>
-          <View style={styles.legendDescription}>
-            <Image resizeMode='contain' style={{marginTop:aspectRatio > 1.6 ? hp(0.1) : hp(0.55) ,width: wp(3.5), height:hp(2)}} source={CIRC_RED} />
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{
+                marginTop: aspectRatio > 1.6 ? hp(0.1) : hp(0.55),
+                width: wp(3.5),
+                height: hp(2),
+              }}
+              source={CIRC_RED}
+            />
             <Text style={styles.text}>Desk is taken</Text>
           </View>
-          <View style={styles.legendDescription}>
-            <Image resizeMode='contain' style={{marginTop:aspectRatio > 1.6 ? hp(0.1) : hp(0.55) ,width: wp(3.5), height:hp(2)}} source={SOCIAL_DIST} />
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{
+                marginTop: aspectRatio > 1.6 ? hp(0.1) : hp(0.55),
+                width: wp(3.5),
+                height: hp(2),
+              }}
+              source={SOCIAL_DIST}
+            />
             <Text style={styles.text}>Desk is blocked</Text>
           </View>
         </View>
@@ -368,13 +433,69 @@ function FloorPlanView(this: any, props: any) {
             justifyContent: 'space-around',
             marginTop: 5,
           }}>
-          <View style={styles.legendDescription}>
-            <Image resizeMode='contain' style={{marginTop:aspectRatio > 1.6 ?  hp(0.1) : hp(0.55) ,width:wp(3.5), height:hp(2)}} source={RECT_GREEN} />
-            <Text style={styles.text}>Desk is avaiable</Text>
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{width: wp(9), height: hp(2), padding: hp(1.1)}}
+              source={RECT_GREEN}
+            />
+            <Text style={styles.text}>Room is avaiable</Text>
           </View>
-          <View style={styles.legendDescription}>
-            <Image resizeMode='contain' style={{marginTop:aspectRatio > 1.6 ? hp(0.1) : hp(0.55) ,width:wp(3.5), height:hp(2)}} source={RECT_RED} />
-            <Text style={styles.text}>Desk is taken</Text>
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{width: wp(9), height: hp(2), padding: hp(1.1)}}
+              source={RECT_RED}
+            />
+            <Text style={styles.text}>Room is taken</Text>
+          </View>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginTop: 5,
+          }}>
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{width: wp(5), height: hp(2), padding: hp(1.1)}}
+              source={SQ_GREEN}
+            />
+            <Text style={styles.text}>Office is avaiable</Text>
+          </View>
+          <View
+            style={[
+              styles.legendDescription,
+              {
+                height: aspectRatio < 1.6 ? hp(3.5) : hp(2.3),
+              },
+            ]}>
+            <Image
+              resizeMode="contain"
+              style={{width: wp(5), height: hp(2), padding: hp(1.1)}}
+              source={SQ_RED}
+            />
+            <Text style={styles.text}>Office is taken</Text>
           </View>
         </View>
       </View>
@@ -409,9 +530,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   box: {
-    position:'absolute',
-    width: wp(90),
-    height: hp(11),
+    position: 'absolute',
+    width: wp(92),
+
     marginTop: hp(1.5),
     bottom: hp(2.2),
     shadowColor: '#000',
@@ -422,18 +543,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
     elevation: 9,
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
   text: {
     fontSize: hp(1.5),
     fontWeight: '400',
-    lineHeight: wp(4.5),
+    lineHeight: hp(2.3),
     marginLeft: 5,
   },
   legendDescription: {
     display: 'flex',
     flexDirection: 'row',
-    height: hp(2.3),
   },
   floorPlanContainer: {
     height: hp(55),
@@ -447,7 +567,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.32,
     shadowRadius: 5.46,
     elevation: 9,
-    backgroundColor:'white',
+    backgroundColor: 'white',
   },
 });
 export default observer(FloorPlanView);

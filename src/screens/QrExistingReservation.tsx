@@ -1,6 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, ToastAndroid} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  ToastAndroid,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from 'react-native';
 import {Button, TextInput} from 'react-native-paper';
 import * as RNLocalize from 'react-native-localize';
 import {useRootStoreContext} from '../Store';
@@ -10,18 +19,17 @@ import {
   widthPercentageToDP,
 } from 'react-native-responsive-screen';
 function BookNow(props: any) {
-  const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const {store, userStore} = useRootStoreContext();
   const BACKEND_URL = store.parameters.backendUrl;
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
-    if (name === '' || code === '') {
+    if (code === '') {
       return;
     }
     setIsDisabled(false);
-  }, [name, code]);
+  }, [code]);
 
   const handleSignIn = () => {
     const requestOptions = {
@@ -31,8 +39,7 @@ function BookNow(props: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: name,
-        code: code,
+        code: `EV ${code}`,
       }),
     };
     fetch(
@@ -59,7 +66,7 @@ function BookNow(props: any) {
                 props.navigation.navigate('QrReservationLogIn', {
                   evCode: result.reservation.code,
                   startDate: result.reservation.bookedTimeIn,
-                  endDate: result.reservation.bookedTimeOut
+                  endDate: result.reservation.bookedTimeOut,
                 });
               }
             })
@@ -79,64 +86,69 @@ function BookNow(props: any) {
         });
       });
   };
+  useEffect(() => {
+    if (code.length === 6) {
+      Keyboard.dismiss();
+    }
+  }, [code]);
   return (
-    <SafeAreaView style={styles.page}>
-      <View style={styles.conatiner}>
-        <Text style={styles.text}>
-          Enter Your Name and EV code of your Reservation
-        </Text>
-      </View>
-      <View style={styles.inputField}>
-        <TextInput
-          mode="outlined"
-          label="Name"
-          value={name}
-          selectionColor={'black'}
-          keyboardType={'email-address'}
-          outlineColor={'blue'}
-          right={<TextInput.Icon name="mail" color={'#03A9F4'} />}
-          onChangeText={text => setName(text)}
-        />
-      </View>
-      <View style={styles.inputField}>
-        <TextInput
-          mode="outlined"
-          label="Ev Code"
-          value={code}
-          selectionColor={'black'}
-          keyboardType={'email-address'}
-          outlineColor={'blue'}
-          right={<TextInput.Icon name="mail" color={'#03A9F4'} />}
-          onChangeText={text => setCode(text)}
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button
-          color={'#4299E1'}
-          labelStyle={styles.buttonText}
-          style={{width: '43%', borderRadius: 20}}
-          mode="contained"
-          onPress={() => {
-            handleSignIn();
-          }}>
-          Back
-        </Button>
-        <Button
-          disabled={isDisabled}
-          color={'#4299E1'}
-          labelStyle={styles.buttonText}
-          style={{width: '43%', borderRadius: 20}}
-          mode="contained"
-          onPress={() => {
-            handleSignIn();
-          }}>
-          Next
-        </Button>
-      </View>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}
+      style={styles.container}
+      enabled={true}>
+      <SafeAreaView style={styles.page}>
+        <View style={styles.conatiner}>
+          <Text style={styles.text}>
+            Enter EV code of your Reservation
+          </Text>
+        </View>
+        <View style={styles.inputField}>
+          <TextInput
+            
+            mode="outlined"
+            label="Ev Code"
+            value={code}
+            selectionColor={'black'}
+            keyboardType={'numeric'}
+            outlineColor={'blue'}
+            right={<TextInput.Icon name="mail" color={'#03A9F4'} />}
+            maxLength={6}
+            onChangeText={text => {
+              const code = text.replace(/[^0-9]/g, '')
+              setCode(code)}}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Button
+            color={'#4299E1'}
+            labelStyle={styles.buttonText}
+            style={{width: '43%', borderRadius: 20}}
+            mode="contained"
+            onPress={() => {
+              props.navigation.navigate('QrReservation', props.route.params);
+            }}>
+            Back
+          </Button>
+          <Button
+            disabled={isDisabled}
+            color={'#4299E1'}
+            labelStyle={styles.buttonText}
+            style={{width: '43%', borderRadius: 20}}
+            mode="contained"
+            onPress={() => {
+              handleSignIn();
+            }}>
+            Next
+          </Button>
+        </View>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   page: {
     width: '100%',
     height: '100%',

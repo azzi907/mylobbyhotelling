@@ -7,6 +7,8 @@ import {useRootStoreContext} from '../Store';
 import {observer} from 'mobx-react-lite';
 import {heightPercentageToDP as hp} from 'react-native-responsive-screen';
 function BookNow(props: any) {
+  console.log("Props ===>", props.route.params.location);
+  
   const [invitees, setInvitees] = useState(null);
   const {store, userStore} = useRootStoreContext();
   const startDate = new Date(props.route.params.startDate);

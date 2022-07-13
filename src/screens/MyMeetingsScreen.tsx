@@ -42,7 +42,7 @@ function MyMeetings(props: any) {
   const [filteredRooms, setFilteredRooms] = useState<any>([]);
   const BACKEND_URL = store.parameters.backendUrl;
   const isFocused = useIsFocused();
-  
+
   const getMeetings = async () => {
     const requestOptions = {
       method: 'POST',
@@ -52,6 +52,7 @@ function MyMeetings(props: any) {
       },
       body: JSON.stringify({
         employeeId: userStore.auth.employee.id,
+        todayDate: new Date().getTime(),
       }),
     };
     fetch(`${BACKEND_URL}/api/rooms_reservations/meetings`, requestOptions)
