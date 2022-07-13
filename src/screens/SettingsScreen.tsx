@@ -52,12 +52,13 @@ function Settings(props: any) {
           styles.bottomContainer,
           {
             height:
-             ( aspectRatio < 1.6
+              aspectRatio < 1.6
                 ? hp(40)
                 : aspectRatio < 1.9
                 ? hp(38)
-                :Platform.OS == "android"? hp(38) : hp(34)),
-
+                : Platform.OS == 'android'
+                ? hp(38)
+                : hp(34),
           },
         ]}>
         <View style={styles.settingsContainer}>
@@ -86,7 +87,13 @@ function Settings(props: any) {
           </View>
         </View>
         <View style={styles.versionContainer}>
-          <Text style={{textAlign: 'left', width: aspectRatio < 1.6 ? wp(60) : wp(55), fontSize: hp(2), fontWeight:'500'}}>
+          <Text
+            style={{
+              textAlign: 'left',
+              width: aspectRatio < 1.6 ? wp(60) : wp(55),
+              fontSize: hp(2),
+              fontWeight: '500',
+            }}>
             Version
           </Text>
           <Text style={{fontSize: hp(1.8)}}>{VersionInfo.appVersion}</Text>
@@ -132,8 +139,9 @@ function Settings(props: any) {
         <View style={styles.userContainer}>
           <View style={{width: aspectRatio < 1.6 ? wp(76) : wp(77)}}>
             <TouchableOpacity
-              style={{flexDirection: 'row', justifyContent: 'space-between'}} onPress={()=>{
-                props.navigation.navigate('PrivacyPolicy')
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}
+              onPress={() => {
+                props.navigation.navigate('PrivacyPolicy');
               }}>
               <Text
                 style={{
@@ -162,11 +170,17 @@ function Settings(props: any) {
           </View>
         </View>
         <View style={styles.logout}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              userStore.update('site', {});
+              userStore.update('employee', {});
+              userStore.update('logout', true);
+              props.navigation.navigate('Init');
+            }}>
             <Text
               style={{
                 textAlign: 'center',
-                width: aspectRatio < 1.6 ?wp(24):wp(29),
+                width: aspectRatio < 1.6 ? wp(24) : wp(29),
                 color: 'red',
                 fontSize: hp(2),
                 fontWeight: '500',
@@ -212,8 +226,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEEEEE',
     borderTopLeftRadius: wp(10),
     borderTopRightRadius: wp(10),
-    bottom: 0
-
+    bottom: 0,
   },
   settingsContainer: {
     padding: wp(2.5),

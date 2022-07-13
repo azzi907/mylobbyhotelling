@@ -13,7 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import Table from "../../images/table_privacy_policy.png";
+const Table = require("../../images/table_privacy_policy.png");
 function PrivacyPolicy(props: any) {
   return (
     <View style={styles.page}>
